@@ -21,10 +21,13 @@
   <ItemGroup>
     <ClCompile Include="amx.c" />
     <ClCompile Include="amxaux.c" />
+    <ClCompile Include="amxcons.c" />
+    <ClCompile Include="amxcore.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="amx.h" />
     <ClInclude Include="amxaux.h" />
+    <ClInclude Include="amxcons.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

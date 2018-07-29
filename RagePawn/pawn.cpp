@@ -1,103 +1,106 @@
 #include "pawn.hpp"
+#include "../amxlib/amx.h"
+#include "../amxlib/amxaux.h"
 
 namespace fs = std::experimental::filesystem;
 
+extern "C" {
+	int AMXAPI amx_ConsoleInit(AMX *amx);
+	int AMXAPI amx_ConsoleCleanup(AMX *amx);
+	int AMXAPI amx_CoreInit(AMX *amx);
+	int AMXAPI amx_CoreCleanup(AMX *amx);
+}
+
+std::string Last(std::string const& str, std::string const& delimiter) {
+	return str.substr(str.find_last_of(delimiter) + delimiter.size());
+}
+
 Pawn::Pawn()
 {
-	std::cout << "Implementing best lang ever created.... )))))))" << std::endl;
+	std::cout << "Initializing RagePawn.." << std::endl;
 	char buffer[MAX_PATH];
 	GetModuleFileNameA(NULL, buffer, MAX_PATH);
 	std::string::size_type pos = std::string(buffer).find_last_of("\\/");
 	std::string path = std::string(buffer).substr(0, pos);
-	path.append("\\script.amx");
-	if (InitializeAMX(path))
+	path.append("\\amx\\");
+
+	for (const auto & p : fs::directory_iterator(path))
 	{
-		Sleep(5000);
-		RegisterNatives();
-		CallMain();
+		const auto path_str = p.path().string();
+		const auto filename = Last(path_str, "\\");
+		if (filename.find(".amx") == std::string::npos) continue;
+
+		std::cout << "Loading '" + filename + "'.." << std::endl;
+		RunAMX(path_str);
+		std::cout << std::endl;
 	}
-	else printf("Failed to load script entirely.... (((((((((((\n");
 }
 
-int Pawn::CallMain()
+void print_int(int value)
 {
-	cell ret;
-	int e = amx_Exec(&amx, &ret, AMX_EXEC_MAIN);
-	std::cout << "fuck p" << std::endl;
-	if (e != AMX_ERR_NONE)
-	{
-		ScriptError();
-		return false;
-	}
-	std::cout << "fuck life" << std::endl;
-	if (ret != 0) printf("Returns %ld\n", (long)ret);
-	return true;
+	printf("%i\n", value);
 }
 
-void Pawn::ScriptError()
+static cell AMX_NATIVE_CALL n_print_int(AMX *amx, const cell *params)
 {
-	printf("Run time error %d: \"%s\"\n", err, aux_StrError(err));
-}
-
-void Pawn::KillScript()
-{
-	std::cout << "Killing script..." << std::endl;
-	amx_Cleanup(&amx);
-	if (script) free(script);
-	script = NULL;
-}
-
-bool Pawn::LoadAMX(char * file, void * program)
-{
-	err = aux_LoadProgram(&amx, file, program);
-	if (err != AMX_ERR_NONE)
-	{
-		ScriptError();
-		return false;
-	}
-	return true;
-}
-
-static cell n_verify(AMX *amx, const cell *params)
-{
-	Natives::verify();
-	return 1;
+	print_int((int)params[1]);
+	return 0;
 }
 
 const AMX_NATIVE_INFO print_Natives[] =
 {
-	{ "verify", n_verify },
-	{ NULL, NULL }
+	{ "print_int", n_print_int },
+	{ NULL,NULL }
 };
 
-
-bool Pawn::RegisterNatives()
+int Pawn::RunAMX(const std::string& path)
 {
-	/*extern AMX_NATIVE_INFO console_Natives[];
-	extern AMX_NATIVE_INFO core_Natives[];
-	err = amx_Register(&amx, console_Natives, -1);
-	if (err != AMX_ERR_NONE)
-	{
-		ScriptError();
-		return false;
-	}
-	err = amx_Register(&amx, core_Natives, -1);
-	if (err != AMX_ERR_NONE)
-	{
-		ScriptError();
-		return false;
-	}*/
-	err = amx_Register(&amx, print_Natives, -1);
-	if (err != AMX_ERR_NONE)
-	{
-		ScriptError();
-		return false;
-	}
+	auto path_str = path.c_str();
+	cell ret = 0;
+	int num = 0;
 
-	cell num = -1;
+	//memset(&amx, 0, sizeof(amx));
+
+	// LoadProgram
+	long memsize = aux_ProgramSize(_strdup(path_str));
+	void * program = malloc(memsize);
+
+	err = aux_LoadProgram(&amx, _strdup(path_str), program);
+	if (err != AMX_ERR_NONE) return Terminate();
+
+	// LoadNatives
+	err = amx_ConsoleInit(&amx);
+	err = amx_CoreInit(&amx);
+
+	err = amx_Register(&amx, print_Natives, -1);
+	if (err != AMX_ERR_NONE) return Terminate();
+
 	amx_NumNatives(&amx, &num);
-	printf("Used %i native functions.\n", num);
-	return true;
+	std::cout << "Registered natives: " << num << std::endl;
+
+	// ExecProgram
+	err = amx_Exec(&amx, &ret, AMX_EXEC_MAIN);
+	if (err != AMX_ERR_NONE) return Terminate();
+
+	std::cout << "Script has returned: " << ret << std::endl;
+
+	//aux_FreeProgram(&amx);
+	return 1;
+}
+
+int Pawn::Terminate()
+{
+	std::cout << "Terminating.." << std::endl;
+	printf("Run time error %d: \"%s\"\n", err, aux_StrError(err));
+	return false;
+}
+
+void Pawn::TerminateScript()
+{
+	std::cout << "Terminating script..." << std::endl;
+	amx_Cleanup(&amx);
+	if (script) free(script);
+	script = NULL;
 }
 
 void Pawn::SetMultiplayer(rage::IMultiplayer *mp)
@@ -105,31 +108,3 @@ void Pawn::SetMultiplayer(rage::IMultiplayer *mp)
 	this->m_mp = mp;
 	mp->AddEventHandler(dynamic_cast<rage::IEventHandler*>(&GetEventInstance()));
 }
-
-
-
-int Pawn::InitializeAMX(const std::string& path)
-{
-	std::cout << path << std::endl;
-	long memsize = aux_ProgramSize(_strdup(path.c_str()));
-	if (memsize == 0)
-	{
-		printf("Script file not found or corrupted\n");
-		return 0;
-	}
-
-	void * program = malloc(memsize);
-	if (program == 0)
-	{
-		printf("Memory allocation for script failed\n");
-		return 0;
-	}
-
-	if (!LoadAMX(_strdup(path.c_str()), program))
-	{
-		printf("Loading script into Abstract Machine failed\n");
-		return 0;
-	}
-	return 1;
-}
-

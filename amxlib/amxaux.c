@@ -16,7 +16,6 @@
  *
  *  Version: $Id: amxaux.c 4523 2011-06-21 15:03:47Z thiadmer $
  */
-#define TYPEDEF_INT
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
