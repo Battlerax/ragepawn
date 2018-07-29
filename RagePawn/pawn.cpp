@@ -4,19 +4,13 @@
 
 namespace fs = std::experimental::filesystem;
 
-extern "C" {
-	int AMXAPI amx_ConsoleInit(AMX *amx);
-	int AMXAPI amx_ConsoleCleanup(AMX *amx);
-	int AMXAPI amx_CoreInit(AMX *amx);
-	int AMXAPI amx_CoreCleanup(AMX *amx);
-}
-
 std::string Last(std::string const& str, std::string const& delimiter) {
 	return str.substr(str.find_last_of(delimiter) + delimiter.size());
 }
 
 Pawn::Pawn()
 {
+	memset(&amx, 0, sizeof(amx));
 	std::cout << "Initializing RagePawn.." << std::endl;
 	char buffer[MAX_PATH];
 	GetModuleFileNameA(NULL, buffer, MAX_PATH);
@@ -59,19 +53,14 @@ int Pawn::RunAMX(const std::string& path)
 	cell ret = 0;
 	int num = 0;
 
-	//memset(&amx, 0, sizeof(amx));
-
 	// LoadProgram
-	long memsize = aux_ProgramSize(_strdup(path_str));
-	void * program = malloc(memsize);
+	size_t memsize = aux_ProgramSize((char*)path_str);
+	//void * program = malloc(memsize);
 
-	err = aux_LoadProgram(&amx, _strdup(path_str), program);
+	err = aux_LoadProgram(&amx, (char*)path_str, NULL);
 	if (err != AMX_ERR_NONE) return Terminate();
 
-	// LoadNatives
-	err = amx_ConsoleInit(&amx);
-	err = amx_CoreInit(&amx);
-
+	// Load Natives
 	err = amx_Register(&amx, print_Natives, -1);
 	if (err != AMX_ERR_NONE) return Terminate();
 
@@ -99,8 +88,7 @@ void Pawn::TerminateScript()
 {
 	std::cout << "Terminating script..." << std::endl;
 	amx_Cleanup(&amx);
-	if (script) free(script);
-	script = NULL;
+	aux_FreeProgram(&amx);
 }
 
 void Pawn::SetMultiplayer(rage::IMultiplayer *mp)
