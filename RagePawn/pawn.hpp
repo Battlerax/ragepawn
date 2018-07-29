@@ -1,8 +1,8 @@
 #pragma once
 
 #include "main.hpp"
-#include "natives.hpp"
 #include <filesystem>
+#include "../amxlib/amx.h"
 
 namespace gm
 {
@@ -35,14 +35,16 @@ public:
 	void SetMultiplayer(rage::IMultiplayer *mp);
 	rage::IMultiplayer *GetMultiplayer() { return m_mp; }
 
-	int CallMain();
-	void ScriptError();
-	void KillScript();
+	int RunAMX(const std::string& path);
 	bool LoadAMX(char *file, void *program);
-	bool RegisterNatives();
+	int Terminate();
+	void TerminateScript();
 
 	static Pawn& GetInstance() { static Pawn instance; return instance; }
 	static gm::EventHandler& GetEventInstance() { static gm::EventHandler instance; return instance; }
+
+	static cell AMX_NATIVE_CALL n_print_int(AMX *amx, const cell *params);
+	void print_int(int value);
 		
 private:
 	rage::IMultiplayer *m_mp;

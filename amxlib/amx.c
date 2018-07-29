@@ -16,7 +16,7 @@
  *
  *  Version: $Id: amx.c 5509 2016-05-17 07:49:04Z  $
  */
-#define TYPEDEF_INT
+
 #define WIN32_LEAN_AND_MEAN
 #if defined _UNICODE || defined __UNICODE__ || defined UNICODE
 # if !defined UNICODE   /* for Windows API */

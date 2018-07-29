@@ -3,6 +3,4 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
-#include "rage.hpp"
-#include "amx.h"
-#include "amxaux.h"
+#include "../ragemp-cppsdk/rage.hpp"
