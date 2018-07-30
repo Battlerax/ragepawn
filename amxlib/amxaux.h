@@ -31,7 +31,7 @@ int AMXAPI aux_LoadProgram(AMX *amx, const char *filename, void *memblock);
 int AMXAPI aux_FreeProgram(AMX *amx);
 
 /* a readable error message from an error code */
-const char * AMXAPI aux_StrError(int errnum);
+char * AMXAPI aux_StrError(int errnum);
 
 enum {
   CODE_SECTION,

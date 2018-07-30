@@ -94,9 +94,9 @@ int AMXAPI aux_FreeProgram(AMX *amx)
   return AMX_ERR_NONE;
 }
 
-const char * AMXAPI aux_StrError(int errnum)
+char * AMXAPI aux_StrError(int errnum)
 {
-static const char *messages[] = {
+static char *messages[] = {
       /* AMX_ERR_NONE      */ "(none)",
       /* AMX_ERR_EXIT      */ "Forced exit",
       /* AMX_ERR_ASSERT    */ "Assertion failed",
