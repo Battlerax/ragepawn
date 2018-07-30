@@ -20,9 +20,10 @@
 #ifndef AMX_H_INCLUDED
 #define AMX_H_INCLUDED
 
+#define HAVE_STDINT_H
+
 #include <stdlib.h>   /* for size_t */
 #include <limits.h>
-#include <stdint.h>
 
 #if (defined __linux || defined __linux__) && !defined __LINUX__
   #define __LINUX__
@@ -65,9 +66,9 @@
   #if defined SN_TARGET_PS2
     typedef int               int32_t;
     typedef unsigned int      uint32_t;
-  //#else
-  //  typedef long int          int32_t;
-  //  typedef unsigned long int uint32_t;
+  #else
+    typedef long int          int32_t;
+    typedef unsigned long int uint32_t;
   #endif
   #if defined __WIN32__ || defined _WIN32 || defined WIN32
     typedef __int64	          int64_t;

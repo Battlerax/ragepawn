@@ -44,7 +44,7 @@ static cell AMX_NATIVE_CALL n_print_int(AMX *amx, const cell *params)
 const AMX_NATIVE_INFO print_Natives[] =
 {
 	{ "print_int", n_print_int },
-	{ NULL,NULL }
+	{ NULL, NULL }
 };
 
 int Pawn::RunAMX(const std::string& path)
@@ -54,9 +54,6 @@ int Pawn::RunAMX(const std::string& path)
 	int num = 0;
 
 	// LoadProgram
-	size_t memsize = aux_ProgramSize((char*)path_str);
-	//void * program = malloc(memsize);
-
 	err = aux_LoadProgram(&amx, (char*)path_str, NULL);
 	if (err != AMX_ERR_NONE) return Terminate();
 
