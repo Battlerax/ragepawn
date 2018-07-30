@@ -16,6 +16,7 @@
  *
  *  Version: $Id: amxaux.c 4523 2011-06-21 15:03:47Z thiadmer $
  */
+#define TYPEDEF_INT
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -94,9 +95,9 @@ int AMXAPI aux_FreeProgram(AMX *amx)
   return AMX_ERR_NONE;
 }
 
-const char * AMXAPI aux_StrError(int errnum)
+char * AMXAPI aux_StrError(int errnum)
 {
-static const char *messages[] = {
+static char *messages[] = {
       /* AMX_ERR_NONE      */ "(none)",
       /* AMX_ERR_EXIT      */ "Forced exit",
       /* AMX_ERR_ASSERT    */ "Assertion failed",

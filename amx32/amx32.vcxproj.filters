@@ -18,10 +18,10 @@
     <ClCompile Include="amx.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="amxaux.c">
+    <ClCompile Include="dllmain.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dllmain.c">
+    <ClCompile Include="amxaux.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
