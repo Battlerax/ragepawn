@@ -4,6 +4,13 @@
 
 namespace fs = std::experimental::filesystem;
 
+extern "C" {
+	int AMXAPI amx_ConsoleInit(AMX *amx);
+	int AMXAPI amx_ConsoleCleanup(AMX *amx);
+	int AMXAPI amx_CoreInit(AMX *amx);
+	int AMXAPI amx_CoreCleanup(AMX *amx);
+}
+
 std::string Last(std::string const& str, std::string const& delimiter) {
 	return str.substr(str.find_last_of(delimiter) + delimiter.size());
 }
@@ -49,7 +56,7 @@ const AMX_NATIVE_INFO print_Natives[] =
 
 int Pawn::RunAMX(const std::string& path)
 {
-	auto path_str = path.c_str();
+	const auto path_str = path.c_str();
 	cell ret = 0;
 	int num = 0;
 
@@ -57,7 +64,11 @@ int Pawn::RunAMX(const std::string& path)
 	err = aux_LoadProgram(&amx, (char*)path_str, NULL);
 	if (err != AMX_ERR_NONE) return Terminate();
 
-	// Load Natives
+	// LoadNatives 
+	amx_ConsoleInit(&amx);
+	err = amx_CoreInit(&amx);
+	if (err != AMX_ERR_NONE) return Terminate();
+
 	err = amx_Register(&amx, print_Natives, -1);
 	if (err != AMX_ERR_NONE) return Terminate();
 
@@ -74,7 +85,7 @@ int Pawn::RunAMX(const std::string& path)
 	return 1;
 }
 
-int Pawn::Terminate()
+int Pawn::Terminate() const
 {
 	std::cout << "Terminating.." << std::endl;
 	printf("Run time error %d: \"%s\"\n", err, aux_StrError(err));

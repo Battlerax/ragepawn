@@ -21,6 +21,8 @@
   <ItemGroup>
     <ClCompile Include="amx.c" />
     <ClCompile Include="amxaux.c" />
+    <ClCompile Include="amxcons.c" />
+    <ClCompile Include="amxcore.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="amx.h" />

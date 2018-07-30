@@ -34,7 +34,7 @@ public:
 	rage::IMultiplayer *GetMultiplayer() { return m_mp; }
 
 	int RunAMX(const std::string& path);
-	int Terminate();
+	int Terminate() const;
 	void TerminateScript();
 
 	static Pawn& GetInstance() { static Pawn instance; return instance; }
