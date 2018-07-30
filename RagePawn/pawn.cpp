@@ -1,5 +1,6 @@
 #include "pawn.hpp"
-
+#include "../amxlib/amx.h"
+#include "../amxlib/amxaux.h"
 
 namespace fs = std::experimental::filesystem;
 
@@ -43,7 +44,7 @@ static cell AMX_NATIVE_CALL n_print_int(AMX *amx, const cell *params)
 const AMX_NATIVE_INFO print_Natives[] =
 {
 	{ "print_int", n_print_int },
-	{ NULL, NULL }
+	{ NULL,NULL }
 };
 
 int Pawn::RunAMX(const std::string& path)
@@ -51,6 +52,10 @@ int Pawn::RunAMX(const std::string& path)
 	auto path_str = path.c_str();
 	cell ret = 0;
 	int num = 0;
+
+	// LoadProgram
+	size_t memsize = aux_ProgramSize((char*)path_str);
+	//void * program = malloc(memsize);
 
 	err = aux_LoadProgram(&amx, (char*)path_str, NULL);
 	if (err != AMX_ERR_NONE) return Terminate();
@@ -63,7 +68,6 @@ int Pawn::RunAMX(const std::string& path)
 	std::cout << "Registered natives: " << num << std::endl;
 
 	// ExecProgram
-	Sleep(2500);
 	err = amx_Exec(&amx, &ret, AMX_EXEC_MAIN);
 	if (err != AMX_ERR_NONE) return Terminate();
 

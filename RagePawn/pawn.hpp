@@ -2,9 +2,7 @@
 
 #include "main.hpp"
 #include <filesystem>
-
 #include "../amxlib/amx.h"
-#include "../amxlib/amxaux.h"
 
 namespace gm
 {

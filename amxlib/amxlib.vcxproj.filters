@@ -21,9 +21,6 @@
     <ClCompile Include="amxaux.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dllmain.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="amx.h">
@@ -32,7 +29,7 @@
     <ClInclude Include="amxaux.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="osdefs.h">
+    <ClInclude Include="amxcons.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
