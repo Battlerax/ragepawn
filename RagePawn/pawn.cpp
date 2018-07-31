@@ -1,7 +1,10 @@
 #include "pawn.hpp"
-#include <cstdarg>
+#include "PlayerNatives.hpp"
+
 #include "../amxlib/amx.h"
 #include "../amxlib/amxaux.h"
+
+#include <cstdarg>
 
 namespace fs = std::experimental::filesystem;
 
@@ -53,6 +56,8 @@ static cell AMX_NATIVE_CALL n_printd(AMX * amx, const cell * params)
 const AMX_NATIVE_INFO rage_Natives[] =
 {
 	{ "printd", n_printd },
+	{ "print_str", PlayerNatives::n_print_str },
+	{ "GetPlayerName", PlayerNatives::n_GetPlayerName },
 	{ NULL, NULL }
 };
 
@@ -108,6 +113,7 @@ void Pawn::SetMultiplayer(rage::IMultiplayer *mp)
 	mp->AddEventHandler(dynamic_cast<rage::IEventHandler*>(&gm::EventHandler::GetInstance()));
 }
 
+// TODO: better error handling needed here....
 void Pawn::Callback(const char *name, const char *fmt, ...)
 {
 	va_list args;
@@ -115,7 +121,11 @@ void Pawn::Callback(const char *name, const char *fmt, ...)
 	
 	int index;
 	err = amx_FindPublic(&amx, name, &index);
-	if (err != AMX_ERR_NONE) Terminate();
+	if (err != AMX_ERR_NONE) 
+	{
+		Terminate();
+		return;
+	}
 
 	std::vector<cell*> addresses;
 
