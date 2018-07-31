@@ -27,6 +27,9 @@
     <ClCompile Include="amxcore.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="amxstring.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="amx.h">

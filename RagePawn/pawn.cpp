@@ -13,6 +13,8 @@ std::string last(std::string const& str, std::string const& delimiter) { return 
 extern "C" {
 	int AMXAPI amx_ConsoleInit(AMX *amx);
 	int AMXAPI amx_ConsoleCleanup(AMX *amx);
+	int AMXEXPORT amx_StringInit(AMX *amx);
+	int AMXEXPORT amx_StringCleanup(AMX *amx);
 }
 
 Pawn::Pawn()
@@ -37,15 +39,10 @@ Pawn::Pawn()
 	}
 }
 
-const AMX_NATIVE_INFO tool_Natives[] =
-{
-	{ "format", n_format },
-	{ NULL, NULL }
-};
-
 const AMX_NATIVE_INFO rage_Natives[] =
 {
 	{ "GetPlayerName", PlayerNatives::n_GetPlayerName },
+	{ "format", n_format},
 	{ NULL, NULL }
 };
 
@@ -61,15 +58,9 @@ int Pawn::RunAMX(const std::string& path)
 
 	// LoadNatives 
 	amx_ConsoleInit(&amx);
+	amx_StringInit(&amx);
 
-	//err = amx_Register(&amx, tool_Natives, -1);
-	//if (err != AMX_ERR_NONE) return Terminate();
-
-	err = amx_Register(&amx, tool_Natives, -1);
-	if (err != AMX_ERR_NONE) return Terminate();
-
-	err = amx_Register(&amx, rage_Natives, -1);
-	if (err != AMX_ERR_NONE) return Terminate();
+	amx_Register(&amx, rage_Natives, -1);
 
 	amx_NumNatives(&amx, &num);
 	std::cout << "Registered natives: " << num << std::endl;
