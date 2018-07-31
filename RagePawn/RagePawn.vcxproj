@@ -160,6 +160,7 @@
   <ItemGroup>
     <ClInclude Include="main.hpp" />
     <ClInclude Include="pawn.hpp" />
+    <ClInclude Include="PlayerNatives.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\amxlib\amxlib.vcxproj">

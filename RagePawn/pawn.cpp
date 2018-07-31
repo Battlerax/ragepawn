@@ -1,4 +1,5 @@
 #include "pawn.hpp"
+#include <cstdarg>
 #include "../amxlib/amx.h"
 #include "../amxlib/amxaux.h"
 
@@ -37,22 +38,24 @@ Pawn::Pawn()
 	}
 }
 
-void print_int(int value)
+void print_int_d(int value) 
 {
-	printf("%i\n", value);
+	std::cout << value << std::endl;
 }
 
-static cell AMX_NATIVE_CALL n_print_int(AMX *amx, const cell *params)
+static cell AMX_NATIVE_CALL n_printd(AMX * amx, const cell * params)
 {
-	print_int((int)params[1]);
+	//std::cout << (int)params[1] << std::endl;
+	print_int_d((int)params[1]);
 	return 0;
 }
 
-const AMX_NATIVE_INFO print_Natives[] =
+const AMX_NATIVE_INFO rage_Natives[] =
 {
-	{ "print_int", n_print_int },
+	{ "printd", n_printd },
 	{ NULL, NULL }
 };
+
 
 int Pawn::RunAMX(const std::string& path)
 {
@@ -66,10 +69,10 @@ int Pawn::RunAMX(const std::string& path)
 
 	// LoadNatives 
 	amx_ConsoleInit(&amx);
-	err = amx_CoreInit(&amx);
-	if (err != AMX_ERR_NONE) return Terminate();
+	//err = amx_CoreInit(&amx);
+	//if (err != AMX_ERR_NONE) return Terminate();
 
-	err = amx_Register(&amx, print_Natives, -1);
+	err = amx_Register(&amx, rage_Natives, -1);
 	if (err != AMX_ERR_NONE) return Terminate();
 
 	amx_NumNatives(&amx, &num);
@@ -102,5 +105,51 @@ void Pawn::TerminateScript()
 void Pawn::SetMultiplayer(rage::IMultiplayer *mp)
 {
 	this->m_mp = mp;
-	mp->AddEventHandler(dynamic_cast<rage::IEventHandler*>(&GetEventInstance()));
+	mp->AddEventHandler(dynamic_cast<rage::IEventHandler*>(&gm::EventHandler::GetInstance()));
+}
+
+void Pawn::Callback(const char *name, const char *fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	
+	int index;
+	err = amx_FindPublic(&amx, name, &index);
+	if (err != AMX_ERR_NONE) Terminate();
+
+	std::vector<cell*> addresses;
+
+	while (*fmt != '\0') 
+	{
+		if (*fmt == 'd') 
+		{
+			amx_Push(&amx, (cell)va_arg(args, int));
+		}
+		else if (*fmt == 's') 
+		{
+			const char * s = va_arg(args, const char*);
+			cell* address;
+			amx_PushString(&amx, &address, s, 0, 0);
+			addresses.push_back(address);
+		}
+		/*else if(*fmt == 'f') 
+		{
+			float f = va_arg(args, float);
+		}*/
+		++fmt;
+	}
+
+	err = amx_Exec(&amx, NULL, index);
+	if (err != AMX_ERR_NONE) Terminate();
+
+	for (auto &i : addresses) {
+		amx_Release(&amx, i);
+		i = NULL;
+	}
+	addresses.clear();
+	
+
+	va_end(args);
+
+	std::cout << "Finished callback..." << std::endl;
 }
