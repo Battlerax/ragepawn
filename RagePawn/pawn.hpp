@@ -1,31 +1,25 @@
 #pragma once
-
 #include "main.hpp"
-#include <filesystem>
-#include "../amxlib/amx.h"
+#include "../amxlib/amx.h" 
 
 class Pawn
 {
-public:
-	Pawn();
+	public:
+		Pawn();
+		static Pawn& GetInstance() { static Pawn instance; return instance; }
 
-	void SetMultiplayer(rage::IMultiplayer *mp);
-	void Callback(const char * name, const char * fmt, ...);
-	rage::IMultiplayer *GetMultiplayer() { return m_mp; }
+		void SetMultiplayer(rage::IMultiplayer *mp);
+		void Callback(const char * name, const char * fmt, ...);
+		rage::IMultiplayer *GetMultiplayer() { return m_mp; }
 
-	int RunAMX(const std::string& path);
-	int Terminate() const;
-	void TerminateScript();
-
-	static Pawn& GetInstance() { static Pawn instance; return instance; }
-
-	//static cell AMX_NATIVE_CALL n_print_int(AMX *amx, const cell *params);
-	//void print_int(int value);
-		
-private:
-	rage::IMultiplayer *m_mp;
-	AMX amx;
-	int err;
+		int RunAMX(const std::string& path);
+		int Terminate() const;
+		void TerminateScript();
+			
+	private:
+		rage::IMultiplayer *m_mp;
+		AMX amx;
+		int err;
 };
 
 namespace gm

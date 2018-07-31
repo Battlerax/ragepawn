@@ -1,22 +1,18 @@
 #include "pawn.hpp"
 #include "PlayerNatives.hpp"
 
-#include "../amxlib/amx.h"
-#include "../amxlib/amxaux.h"
+#include "../amxlib/amxaux.h" 
 
-#include <cstdarg>
+#include <filesystem> 
+#include "format.hpp"
 
 namespace fs = std::experimental::filesystem;
+
+std::string last(std::string const& str, std::string const& delimiter) { return str.substr(str.find_last_of(delimiter) + delimiter.size()); }
 
 extern "C" {
 	int AMXAPI amx_ConsoleInit(AMX *amx);
 	int AMXAPI amx_ConsoleCleanup(AMX *amx);
-	int AMXAPI amx_CoreInit(AMX *amx);
-	int AMXAPI amx_CoreCleanup(AMX *amx);
-}
-
-std::string Last(std::string const& str, std::string const& delimiter) {
-	return str.substr(str.find_last_of(delimiter) + delimiter.size());
 }
 
 Pawn::Pawn()
@@ -32,7 +28,7 @@ Pawn::Pawn()
 	for (const auto & p : fs::directory_iterator(path))
 	{
 		const auto path_str = p.path().string();
-		const auto filename = Last(path_str, "\\");
+		const auto filename = last(path_str, "\\");
 		if (filename.find(".amx") == std::string::npos) continue;
 
 		std::cout << "Loading '" + filename + "'.." << std::endl;
@@ -41,26 +37,17 @@ Pawn::Pawn()
 	}
 }
 
-void print_int_d(int value) 
+const AMX_NATIVE_INFO tool_Natives[] =
 {
-	std::cout << value << std::endl;
-}
-
-static cell AMX_NATIVE_CALL n_printd(AMX * amx, const cell * params)
-{
-	//std::cout << (int)params[1] << std::endl;
-	print_int_d((int)params[1]);
-	return 0;
-}
-
-const AMX_NATIVE_INFO rage_Natives[] =
-{
-	{ "printd", n_printd },
-	{ "print_str", PlayerNatives::n_print_str },
-	{ "GetPlayerName", PlayerNatives::n_GetPlayerName },
+	{ "format", n_format },
 	{ NULL, NULL }
 };
 
+const AMX_NATIVE_INFO rage_Natives[] =
+{
+	{ "GetPlayerName", PlayerNatives::n_GetPlayerName },
+	{ NULL, NULL }
+};
 
 int Pawn::RunAMX(const std::string& path)
 {
@@ -74,8 +61,12 @@ int Pawn::RunAMX(const std::string& path)
 
 	// LoadNatives 
 	amx_ConsoleInit(&amx);
-	//err = amx_CoreInit(&amx);
+
+	//err = amx_Register(&amx, tool_Natives, -1);
 	//if (err != AMX_ERR_NONE) return Terminate();
+
+	err = amx_Register(&amx, tool_Natives, -1);
+	if (err != AMX_ERR_NONE) return Terminate();
 
 	err = amx_Register(&amx, rage_Natives, -1);
 	if (err != AMX_ERR_NONE) return Terminate();
@@ -87,9 +78,9 @@ int Pawn::RunAMX(const std::string& path)
 	err = amx_Exec(&amx, &ret, AMX_EXEC_MAIN);
 	if (err != AMX_ERR_NONE) return Terminate();
 
-	std::cout << "Script has returned: " << ret << std::endl;
+	//std::cout << "Script has returned: " << ret << std::endl;
 
-	//aux_FreeProgram(&amx);
+	aux_FreeProgram(&amx);
 	return 1;
 }
 
@@ -157,8 +148,6 @@ void Pawn::Callback(const char *name, const char *fmt, ...)
 		i = NULL;
 	}
 	addresses.clear();
-	
-
 	va_end(args);
 
 	std::cout << "Finished callback..." << std::endl;
