@@ -2,45 +2,25 @@
 #include <tchar.h>
 #include <cassert>
 
-#define MAX_FORMATSTR   512
-
 // native format(output[], size = sizeof output, const format[], ...);
 cell AMX_NATIVE_CALL n_format(AMX *amx, const cell *params)
 {
 	cell *cstr;
 	strdata info;
-	TCHAR output[MAX_FORMATSTR];
 
 	memset(&info, 0, sizeof info);
 	info.params = params + 4;
 	info.numparams = (int)(params[0] / sizeof(cell) - 3);
 	info.skip = 0;
-	info.length = MAX_FORMATSTR;  /* max. length of the string */
+	info.length = (int)params[2];
 
-	// grab the string to format
-	cstr = amx_Address(amx, params[3]);
+    cstr = amx_Address(amx, params[3]);
 	const auto result = get_str(amx, cstr, &info) + '\0';
-	std::cout << "FORMAT RESULT: " << result << std::endl;
-	strcpy(output, result.c_str());
 
-	/* store the output string */
 	cstr = amx_Address(amx, params[1]);
-	amx_SetString(cstr, (char*)output, true, sizeof(TCHAR)>1, (int)params[2]); // Problem here, will finish later
+	amx_SetString(cstr, result.c_str(), 0, 0, (int)params[2]);
 	return 1;
 }
-
-//cell AMX_NATIVE_CALL n_format2(AMX *amx, const cell *params)
-//{
-//	cell *cstr;
-//	strdata info;
-//	memset(&info, 0, sizeof info);
-//	info.params = params + 2;
-//	info.numparams = (int)(params[0] / sizeof(cell)) - 1;
-//	cstr = amx_Address(amx, params[1]);
-//	const auto result = get_str(amx, cstr, &info);
-//	std::cout << "FORMAT RESULT: " << result << std::endl;
-//	return 0;
-//}
 
 static std::string to_string(AMX *amx, TCHAR ch, cell param, TCHAR sign, TCHAR decpoint, int width, int digits, TCHAR filler)
 {
