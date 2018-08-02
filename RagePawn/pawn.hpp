@@ -2,26 +2,28 @@
 #include "main.hpp"
 #include "../amxlib/amx.h" 
 
+static std::vector<AMX*> filterscripts;
+static std::vector<AMX*> gamemodes;
+
 class Pawn
 {
 	public:
 		Pawn();
+		rage::IMultiplayer *GetMultiplayer() { return m_mp; }
+		void SetMultiplayer(rage::IMultiplayer *mp);
 		static Pawn& GetInstance() { static Pawn instance; return instance; }
 
-		void SetMultiplayer(rage::IMultiplayer *mp);
-		void Callback(const char * name, const char * fmt, ...);
-		bool CallPublic(const char* funcName);
-		rage::IMultiplayer *GetMultiplayer() { return m_mp; }
-
-		int RunAMX(const std::string& path);
+		static bool CallPublic(AMX *amx, const char* name);
+		static void CallPublicEx(AMX *amx, const char * name, const char * fmt, ...);
+		
+		static void RunAMX(const std::string& path, bool fs);
+		static void Iterate(const std::string& path, bool fs);
 		static int TerminateLoad(const std::string& filename);
-		static int Terminate(const int& err);
-		void TerminateScript();
+		static int Terminate(int err);
+		static void TerminateScript(AMX *amx);
 			
 	private:
 		rage::IMultiplayer *m_mp;
-		AMX amx;
-		int err;
 };
 
 namespace gm
@@ -41,7 +43,16 @@ namespace gm
 		virtual void OnPlayerJoin(rage::IPlayer *player)
 		{
 			//std::cout << "Player: " << player->GetId() << std::endl;
-			Pawn::GetInstance().Callback("OnPlayerConnect", "d", (int)player->GetId());
+			for (auto &amx : filterscripts)
+			{
+				Pawn::CallPublicEx(amx, "OnPlayerConnect", "d", (int)player->GetId());
+			}
+
+			for (auto &amx : gamemodes)
+			{
+				Pawn::CallPublicEx(amx, "OnPlayerConnect", "d", (int)player->GetId());
+			}
+			
 		}
 
 		virtual void Tick() {  }

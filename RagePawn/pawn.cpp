@@ -12,8 +12,6 @@
 
 namespace fs = std::experimental::filesystem;
 
-std::string last(std::string const& str, std::string const& delimiter) { return str.substr(str.find_last_of(delimiter) + delimiter.size()); }
-
 extern "C" {
 	int AMXEXPORT AMXAPI amx_ConsoleInit(AMX *amx);
 	int AMXEXPORT AMXAPI amx_ConsoleCleanup(AMX *amx);
@@ -37,25 +35,31 @@ extern "C" {
 	int AMXEXPORT AMXAPI amx_ArgsCleanup(AMX *amx);
 }
 
+int RunAMX(const std::string& path);
+
 Pawn::Pawn()
 {
-	memset(&amx, 0, sizeof(amx));
 	std::cout << "Initializing RagePawn.." << std::endl;
 	char buffer[MAX_PATH];
 	GetModuleFileNameA(NULL, buffer, MAX_PATH);
-	std::string::size_type pos = std::string(buffer).find_last_of("\\/");
+	const std::string::size_type pos = std::string(buffer).find_last_of("\\/");
 	std::string path = std::string(buffer).substr(0, pos);
-	path.append("\\amx\\");
+	Iterate(path.append("\\amx\\filterscripts"), true);
+	std::cout << std::endl;
+	//Iterate(path.append("\\amx\\gamemodes"), false);
+}
 
+void Pawn::Iterate(const std::string& path, const bool fs)
+{
+	std::cout << "-> Loading " << path.substr(path.find_last_of("\\/") + 1) << ".." << std::endl;
 	for (const auto & p : fs::directory_iterator(path))
 	{
 		const auto path_str = p.path().string();
-		const auto filename = last(path_str, "\\");
-		if (filename.find(".amx") == std::string::npos) continue;
+		const auto filename = path_str.substr(path_str.find_last_of("\\/") + 1);
+		if (filename.substr(filename.find_last_of('.') + 1) != "amx") continue;
 
-		std::cout << "Loading '" + filename + "'.." << std::endl;
-		RunAMX(path_str);
-		std::cout << std::endl;
+		std::cout << "--> Loading '" << filename << "'.." << std::endl;
+		RunAMX(path_str, fs);
 	}
 }
 
@@ -65,13 +69,12 @@ const AMX_NATIVE_INFO rage_Natives[] =
 	{ NULL, NULL }
 };
 
-int Pawn::RunAMX(const std::string& path)
+void Pawn::RunAMX(const std::string& path, const bool fs)
 {
-	const auto filename = last(path, "\\");
 	const auto path_str = path.c_str();
-
-	err = aux_LoadProgram(&amx, (char*)path_str, NULL);
-	if (err != AMX_ERR_NONE) return TerminateLoad(filename);
+	AMX amx;
+	const int err = aux_LoadProgram(&amx, (char*)path_str, NULL);
+	if (err != AMX_ERR_NONE) TerminateLoad(path.substr(path.find_last_of("\\/") + 1));
 
 	amx_ConsoleInit(&amx);
 	amx_StringInit(&amx);
@@ -86,26 +89,34 @@ int Pawn::RunAMX(const std::string& path)
 
 	amx_Register(&amx, rage_Natives, -1);
 
-	int count;
-	amx_NumNatives(&amx, &count);
-	printf("natives: %d\n", count);
-	for (int i = 0; i < count; i++) {
-	    char temp[32];
-	    amx_GetNative(&amx, i, temp);
-	    printf("     %s\n", temp);
-	}
+	//int count;
+	//amx_NumNatives(&amx, &count);
+	//printf("natives: %d\n", count);
+	//for (int i = 0; i < count; i++) {
+	//    char temp[32];
+	//    amx_GetNative(&amx, i, temp);
+	//    printf("     %s\n", temp);
+	//}
 
-	amx_NumPublics(&amx, &count);
-	printf("publics: %d\n", count);
-	for (int i = 0; i < count; i++) {
-	    char temp[32];
-	    amx_GetPublicEx(&amx, i, temp);
-	    printf("     %s\n", temp);
-	}
+	//amx_NumPublics(&amx, &count);
+	//printf("publics: %d\n", count);
+	//for (int i = 0; i < count; i++) {
+	//    char temp[32];
+	//    amx_GetPublicEx(&amx, i, temp);
+	//    printf("     %s\n", temp);
+	//}
 
-	CallPublic("OnFilterScriptInit");
+	if (fs)
+	{
+		CallPublic(&amx, "OnFilterScriptInit");
+		filterscripts.push_back(&amx);
+	}
+	else
+	{
+		CallPublic(&amx, "OnGameModeInit");
+		gamemodes.push_back(&amx);
+	}
 	
-	return TerminateLoad(filename);
 }
 
 void UnloadAMX()
@@ -128,17 +139,17 @@ int Pawn::TerminateLoad(const std::string& filename)
 	return false;
 }
 
-int Pawn::Terminate(const int& err)
+int Pawn::Terminate(const int err)
 {
 	printf("Run time error %d: \"%s\"\n", err, aux_StrError(err));
-	return false;
+	exit(1);
 }
 
-void Pawn::TerminateScript()
+void Pawn::TerminateScript(AMX *amx)
 {
 	std::cout << "Terminating script..." << std::endl;
-	amx_Cleanup(&amx);
-	aux_FreeProgram(&amx);
+	amx_Cleanup(amx);
+	aux_FreeProgram(amx);
 }
 
 void Pawn::SetMultiplayer(rage::IMultiplayer *mp)
@@ -147,26 +158,26 @@ void Pawn::SetMultiplayer(rage::IMultiplayer *mp)
 	mp->AddEventHandler(dynamic_cast<rage::IEventHandler*>(&gm::EventHandler::GetInstance()));
 }
 
-bool Pawn::CallPublic(const char* funcName)
+bool Pawn::CallPublic(AMX *amx, const char* name)
 {
 	int id;
 	cell ret = 0;
 
-	if (!amx_FindPublic(&amx, funcName, &id))
+	if (!amx_FindPublic(amx, name, &id))
 	{
-		amx_Exec(&amx, &ret, id);
+		amx_Exec(amx, &ret, id);
 		if (!ret) return ret;
 	}
 	return (int)ret;
 }
 
-void Pawn::Callback(const char *name, const char *fmt, ...)
+void Pawn::CallPublicEx(AMX *amx, const char *name, const char *fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
 	
 	int index;
-	err = amx_FindPublic(&amx, name, &index);
+	int err = amx_FindPublic(amx, name, &index);
 	if (err != AMX_ERR_NONE) 
 	{
 		Terminate(err);
@@ -179,13 +190,13 @@ void Pawn::Callback(const char *name, const char *fmt, ...)
 	{
 		if (*fmt == 'd') 
 		{
-			amx_Push(&amx, (cell)va_arg(args, int));
+			amx_Push(amx, (cell)va_arg(args, int));
 		}
 		else if (*fmt == 's') 
 		{
 			const char * s = va_arg(args, const char*);
 			cell* address;
-			amx_PushString(&amx, &address, s, 0, 0);
+			amx_PushString(amx, &address, s, 0, 0);
 			addresses.push_back(address);
 		}
 		else if(*fmt == 'f') 
@@ -195,11 +206,11 @@ void Pawn::Callback(const char *name, const char *fmt, ...)
 		++fmt;
 	}
 
-	err = amx_Exec(&amx, NULL, index);
+	err = amx_Exec(amx, NULL, index);
 	if (err != AMX_ERR_NONE) Terminate(err);
 
 	for (auto &i : addresses) {
-		amx_Release(&amx, i);
+		amx_Release(amx, i);
 		i = NULL;
 	}
 	addresses.clear();

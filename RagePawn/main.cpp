@@ -12,7 +12,7 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 			break;
 
 		case DLL_PROCESS_DETACH:
-			Pawn::GetInstance().TerminateScript();
+			//Pawn::GetInstance().TerminateScript();
 			break;
 	}
 	return TRUE;  // Successful DLL_PROCESS_ATTACH.
