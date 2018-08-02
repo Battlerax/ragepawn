@@ -4,16 +4,16 @@
 
 typedef struct {
 	bool fs;
-	AMX *amx;
+	AMX amx;
 } script;
 
-static std::vector<script*> scripts;
+static std::vector<script> scripts;
 
 class Pawn
 {
 	public:
 		Pawn();
-		rage::IMultiplayer *GetMultiplayer() { return m_mp; }
+		rage::IMultiplayer *GetMultiplayer() const { return m_mp; }
 		void SetMultiplayer(rage::IMultiplayer *mp);
 		static Pawn& GetInstance() { static Pawn instance; return instance; }
 
@@ -22,6 +22,7 @@ class Pawn
 		
 		static void RunAMX(const std::string& path, bool fs);
 		static void Iterate(const std::string& path, bool fs);
+
 		static int TerminateLoad(const std::string& filename);
 		static int Terminate(int err);
 		static void TerminateScript(AMX *amx);
@@ -46,14 +47,18 @@ namespace gm
 
 		virtual void OnPlayerJoin(rage::IPlayer *player)
 		{
-			//std::cout << "Player: " << player->GetId() << std::endl;
 			for (auto &script : scripts)
 			{
-				Pawn::CallPublicEx(script->amx, "OnPlayerConnect", "d", (int)player->GetId());
+				Pawn::CallPublicEx(&script.amx, "OnPlayerConnect", "d", (int)player->GetId());
 			}
-			
 		}
 
-		virtual void Tick() {  }
+		virtual void Tick()
+		{
+			for (auto &script : scripts)
+			{
+				Pawn::CallPublic(&script.amx, "OnUpdate"); // todo: Cache the address
+			}
+		}
 	};
 }

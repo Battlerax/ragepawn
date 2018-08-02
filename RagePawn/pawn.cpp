@@ -35,8 +35,6 @@ extern "C" {
 	int AMXEXPORT AMXAPI amx_ArgsCleanup(AMX *amx);
 }
 
-int RunAMX(const std::string& path);
-
 Pawn::Pawn()
 {
 	std::cout << "Initializing RagePawn.." << std::endl;
@@ -46,7 +44,7 @@ Pawn::Pawn()
 	std::string path = std::string(buffer).substr(0, pos);
 	Iterate(path.append("\\amx\\filterscripts"), true);
 	std::cout << std::endl;
-	//Iterate(path.append("\\amx\\gamemodes"), false);
+	Iterate(path.append("\\amx\\gamemodes"), false);
 }
 
 void Pawn::Iterate(const std::string& path, const bool fs)
@@ -62,8 +60,6 @@ void Pawn::Iterate(const std::string& path, const bool fs)
 		RunAMX(path_str, fs);
 	}
 }
-
-
 
 void Pawn::RunAMX(const std::string& path, const bool fs)
 {
@@ -104,14 +100,14 @@ void Pawn::RunAMX(const std::string& path, const bool fs)
 	//}
 
 	script scr;
-	scr.amx = &amx;
+	scr.amx = amx;
 	scr.fs = fs;
-	scripts.push_back(&scr);
+	scripts.push_back(scr);
 	fs ? CallPublic(&amx, "OnFilterScriptInit") : CallPublic(&amx, "OnGameModeInit");
 }
 
-void UnloadAMX()
-{
+//void Pawn::UnloadAMX()
+//{
     //amx_ArgsCleanup();
     //amx_ProcessCleanup();
     //amx_TimeCleanup();
@@ -122,7 +118,7 @@ void UnloadAMX()
     //amx_CoreCleanup();
     //amx_StringCleanup();
     //amx_ConsoleCleanup();
-}
+//}
 
 int Pawn::TerminateLoad(const std::string& filename)
 {
