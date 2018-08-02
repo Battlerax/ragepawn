@@ -63,16 +63,13 @@ void Pawn::Iterate(const std::string& path, const bool fs)
 	}
 }
 
-const AMX_NATIVE_INFO rage_Natives[] =
-{
-	{ "format", n_format},
-	{ NULL, NULL }
-};
+
 
 void Pawn::RunAMX(const std::string& path, const bool fs)
 {
-	const auto path_str = path.c_str();
 	AMX amx;
+
+	const auto path_str = path.c_str();
 	const int err = aux_LoadProgram(&amx, (char*)path_str, NULL);
 	if (err != AMX_ERR_NONE) TerminateLoad(path.substr(path.find_last_of("\\/") + 1));
 
@@ -106,17 +103,11 @@ void Pawn::RunAMX(const std::string& path, const bool fs)
 	//    printf("     %s\n", temp);
 	//}
 
-	if (fs)
-	{
-		CallPublic(&amx, "OnFilterScriptInit");
-		filterscripts.push_back(&amx);
-	}
-	else
-	{
-		CallPublic(&amx, "OnGameModeInit");
-		gamemodes.push_back(&amx);
-	}
-	
+	script scr;
+	scr.amx = &amx;
+	scr.fs = fs;
+	scripts.push_back(&scr);
+	fs ? CallPublic(&amx, "OnFilterScriptInit") : CallPublic(&amx, "OnGameModeInit");
 }
 
 void UnloadAMX()

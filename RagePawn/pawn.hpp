@@ -2,8 +2,12 @@
 #include "main.hpp"
 #include "../amxlib/amx.h" 
 
-static std::vector<AMX*> filterscripts;
-static std::vector<AMX*> gamemodes;
+typedef struct {
+	bool fs;
+	AMX *amx;
+} script;
+
+static std::vector<script*> scripts;
 
 class Pawn
 {
@@ -43,14 +47,9 @@ namespace gm
 		virtual void OnPlayerJoin(rage::IPlayer *player)
 		{
 			//std::cout << "Player: " << player->GetId() << std::endl;
-			for (auto &amx : filterscripts)
+			for (auto &script : scripts)
 			{
-				Pawn::CallPublicEx(amx, "OnPlayerConnect", "d", (int)player->GetId());
-			}
-
-			for (auto &amx : gamemodes)
-			{
-				Pawn::CallPublicEx(amx, "OnPlayerConnect", "d", (int)player->GetId());
+				Pawn::CallPublicEx(script->amx, "OnPlayerConnect", "d", (int)player->GetId());
 			}
 			
 		}
