@@ -475,6 +475,7 @@ int AMXAPI amx_FindTagId(AMX *amx, cell tag_id, char *tagname);
 int AMXAPI amx_Flags(AMX *amx,uint16_t *flags);
 int AMXAPI amx_GetNative(AMX *amx, int index, char *name);
 int AMXAPI amx_GetPublic(AMX *amx, int index, char *name, ucell *address);
+int AMXAPI amx_GetPublicEx(AMX *amx, int index, char *name);
 int AMXAPI amx_GetPubVar(AMX *amx, int index, char *name, cell **address);
 int AMXAPI amx_GetString(char *dest,const cell *source, int use_wchar, size_t size);
 int AMXAPI amx_GetTag(AMX *amx, int index, char *tagname, cell *tag_id);

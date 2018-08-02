@@ -30,6 +30,39 @@
     <ClCompile Include="amxstring.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="amxfloat.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="amxdgram.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="amxfile.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fpattern.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="minIni.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="amxargs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="amxfixed.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="amxgc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="amxpool.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="amxprocess.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="amxtime.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="amx.h">
@@ -39,6 +72,27 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="amxcons.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fpattern.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="minIni.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="minGlue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="amxgc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="amxpool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="amxtime.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

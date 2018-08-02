@@ -13,7 +13,7 @@ class Pawn
 		rage::IMultiplayer *GetMultiplayer() { return m_mp; }
 
 		int RunAMX(const std::string& path);
-		int Terminate() const;
+		int Terminate(int err);
 		void TerminateScript();
 			
 	private:

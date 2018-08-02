@@ -16,6 +16,7 @@
  *
  *  Version: $Id: amx.c 5509 2016-05-17 07:49:04Z  $
  */
+#define NDEBUG
 
 #define WIN32_LEAN_AND_MEAN
 #if defined _UNICODE || defined __UNICODE__ || defined UNICODE
@@ -1641,6 +1642,24 @@ int AMXAPI amx_GetPublic(AMX *amx, int index, char *name, ucell *address)
   if (address!=NULL)
     *address=func->address;
   return AMX_ERR_NONE;
+}
+
+int AMXAPI amx_GetPublicEx(AMX *amx, int index, char *name)
+{
+    AMX_HEADER *hdr;
+    AMX_FUNCSTUB *func;
+
+    hdr = (AMX_HEADER *)amx->base;
+    assert(hdr != NULL);
+    assert(hdr->magic == AMX_MAGIC);
+    assert(hdr->publics <= hdr->natives);
+    if (index >= (cell)NUMENTRIES(hdr, publics, natives))
+        return AMX_ERR_INDEX;
+
+    func = GETENTRY(hdr, publics, index);
+    if (name != NULL)
+        strcpy(name, GETENTRYNAME(hdr, func));
+    return AMX_ERR_NONE;
 }
 
 int AMXAPI amx_FindPublic(AMX *amx, const char *name, int *index)

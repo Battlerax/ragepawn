@@ -14,7 +14,7 @@ cell AMX_NATIVE_CALL n_format(AMX *amx, const cell *params)
 	info.skip = 0;
 	info.length = (int)params[2];
 
-    cstr = amx_Address(amx, params[3]);
+	cstr = amx_Address(amx, params[3]);
 	const auto result = get_str(amx, cstr, &info) + '\0';
 
 	cstr = amx_Address(amx, params[1]);
