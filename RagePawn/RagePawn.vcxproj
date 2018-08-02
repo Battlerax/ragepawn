@@ -165,7 +165,7 @@
     <ClInclude Include="format.hpp" />
     <ClInclude Include="main.hpp" />
     <ClInclude Include="pawn.hpp" />
-    <ClInclude Include="PlayerNatives.hpp" />
+    <ClInclude Include="natives.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\amxlib\amxlib.vcxproj">

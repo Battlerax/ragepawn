@@ -1,5 +1,4 @@
 #include "pawn.hpp"
-#include "PlayerNatives.hpp"
 
 #include "../amxlib/amxaux.h" 
 
@@ -8,6 +7,8 @@
 
 #pragma comment( lib, "winmm.lib")  // amx_TimeInit(&amx); 
 #pragma comment( lib, "ws2_32.lib")  // amx_DGramInit(&amx); 
+
+#include "natives.hpp"
 
 namespace fs = std::experimental::filesystem;
 
@@ -60,22 +61,18 @@ Pawn::Pawn()
 
 const AMX_NATIVE_INFO rage_Natives[] =
 {
-	{ "GetPlayerName", PlayerNatives::n_GetPlayerName },
 	{ "format", n_format},
 	{ NULL, NULL }
 };
 
 int Pawn::RunAMX(const std::string& path)
 {
+	const auto filename = last(path, "\\");
 	const auto path_str = path.c_str();
-	cell ret = 0;
-	int num = 0;
 
-	// LoadProgram
 	err = aux_LoadProgram(&amx, (char*)path_str, NULL);
-	if (err != AMX_ERR_NONE) return Terminate(err);
+	if (err != AMX_ERR_NONE) return TerminateLoad(filename);
 
-	// LoadNatives 
 	amx_ConsoleInit(&amx);
 	amx_StringInit(&amx);
 	amx_CoreInit(&amx);
@@ -91,27 +88,24 @@ int Pawn::RunAMX(const std::string& path)
 
 	int count;
 	amx_NumNatives(&amx, &count);
-	printf("natives: %d\n\r", count);
+	printf("natives: %d\n", count);
 	for (int i = 0; i < count; i++) {
 	    char temp[32];
 	    amx_GetNative(&amx, i, temp);
-	    printf("     %s\n\r", temp);
+	    printf("     %s\n", temp);
 	}
 
 	amx_NumPublics(&amx, &count);
-	printf("publics: %d\n\r", count);
+	printf("publics: %d\n", count);
 	for (int i = 0; i < count; i++) {
 	    char temp[32];
 	    amx_GetPublicEx(&amx, i, temp);
-	    printf("     %s\n\r", temp);
+	    printf("     %s\n", temp);
 	}
 
-	// ExecProgram
-	err = amx_Exec(&amx, &ret, AMX_EXEC_MAIN);
-	if (err != AMX_ERR_NONE) return Terminate(err);
-
-	aux_FreeProgram(&amx);
-	return 1;
+	CallPublic("OnFilterScriptInit");
+	
+	return TerminateLoad(filename);
 }
 
 void UnloadAMX()
@@ -126,12 +120,16 @@ void UnloadAMX()
     //amx_CoreCleanup();
     //amx_StringCleanup();
     //amx_ConsoleCleanup();
-    
 }
 
-int Pawn::Terminate(const int err)
+int Pawn::TerminateLoad(const std::string& filename)
 {
-	std::cout << "Terminating.." << std::endl;
+	std::cout << "Error: Failed to load '" << filename << "'.." << std::endl;
+	return false;
+}
+
+int Pawn::Terminate(const int& err)
+{
 	printf("Run time error %d: \"%s\"\n", err, aux_StrError(err));
 	return false;
 }
@@ -147,6 +145,19 @@ void Pawn::SetMultiplayer(rage::IMultiplayer *mp)
 {
 	this->m_mp = mp;
 	mp->AddEventHandler(dynamic_cast<rage::IEventHandler*>(&gm::EventHandler::GetInstance()));
+}
+
+bool Pawn::CallPublic(const char* funcName)
+{
+	int id;
+	cell ret = 0;
+
+	if (!amx_FindPublic(&amx, funcName, &id))
+	{
+		amx_Exec(&amx, &ret, id);
+		if (!ret) return ret;
+	}
+	return (int)ret;
 }
 
 void Pawn::Callback(const char *name, const char *fmt, ...)

@@ -10,10 +10,12 @@ class Pawn
 
 		void SetMultiplayer(rage::IMultiplayer *mp);
 		void Callback(const char * name, const char * fmt, ...);
+		bool CallPublic(const char* funcName);
 		rage::IMultiplayer *GetMultiplayer() { return m_mp; }
 
 		int RunAMX(const std::string& path);
-		int Terminate(int err);
+		static int TerminateLoad(const std::string& filename);
+		static int Terminate(const int& err);
 		void TerminateScript();
 			
 	private:
