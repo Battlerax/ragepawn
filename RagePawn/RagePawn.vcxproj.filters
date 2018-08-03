@@ -23,6 +23,12 @@
     <ClCompile Include="format.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="player_natives.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="util_natives.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pawn.hpp">
@@ -37,8 +43,8 @@
     <ClInclude Include="callbacks.hpp">
       <Filter>API</Filter>
     </ClInclude>
-    <ClInclude Include="natives.hpp">
-      <Filter>API</Filter>
+    <ClInclude Include="api.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

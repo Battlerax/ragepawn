@@ -9,7 +9,7 @@ typedef struct {
 
 static std::vector<script> scripts;
 
-class Pawn
+class Pawn : public rage::IPlugin
 {
 	public:
 		Pawn();
@@ -26,6 +26,8 @@ class Pawn
 		static int TerminateLoad(const std::string& filename);
 		static int Terminate(int err);
 		static void TerminateScript(AMX *amx);
+
+		rage::IEntity *GetEntity(rage::entityId_t id, rage::entity_t type) const;
 			
 	private:
 		rage::IMultiplayer *m_mp;

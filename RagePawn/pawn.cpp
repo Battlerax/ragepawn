@@ -8,12 +8,9 @@
 #pragma comment( lib, "winmm.lib")  // amx_TimeInit(&amx); 
 #pragma comment( lib, "ws2_32.lib")  // amx_DGramInit(&amx); 
 
-#include "natives.hpp"
 #include "callbacks.hpp"
 
 namespace fs = std::experimental::filesystem;
-
-// Discontinued Open Source support
 
 extern "C" {
 	int AMXEXPORT AMXAPI amx_ConsoleInit(AMX *amx);
@@ -37,6 +34,9 @@ extern "C" {
 	int AMXEXPORT AMXAPI amx_ArgsInit(AMX *amx);
 	int AMXEXPORT AMXAPI amx_ArgsCleanup(AMX *amx);
 }
+
+int amx_playerInit(AMX *amx);
+int amx_utilInit(AMX *amx);
 
 Pawn::Pawn()
 {
@@ -83,7 +83,9 @@ void Pawn::RunAMX(const std::string& path, const bool fs)
 	amx_ProcessInit(&amx);
 	amx_ArgsInit(&amx);
 
-	amx_Register(&amx, rage_Natives, -1);
+	amx_utilInit(&amx);
+	amx_playerInit(&amx);
+	
 
 	//int count;
 	//amx_NumNatives(&amx, &count);

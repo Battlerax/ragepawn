@@ -159,14 +159,16 @@
   <ItemGroup>
     <ClCompile Include="format.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="player_natives.cpp" />
     <ClCompile Include="pawn.cpp" />
+    <ClCompile Include="util_natives.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="api.hpp" />
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="format.hpp" />
     <ClInclude Include="main.hpp" />
     <ClInclude Include="pawn.hpp" />
-    <ClInclude Include="natives.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\amxlib\amxlib.vcxproj">
