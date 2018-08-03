@@ -133,22 +133,22 @@ public:
 			Pawn::CallPublicEx(&script.amx, "OnPlayerDamage", "d", (int)player->GetId(), "f", healthLoss, "f", armorLoss);
 	}
 
-	void OnPlayerStartEnterVehicle(rage::IPlayer* player, rage::IVehicle* vehicle, uint8_t seatId) override;
-	void OnPlayerStartExitVehicle(rage::IPlayer* player, rage::IVehicle* vehicle) override;
-	void OnPlayerWeaponChange(rage::IPlayer* player, rage::hash_t oldWeapon, rage::hash_t newWeapon) override;
-	void OnPlayerRemoteEvent(rage::IPlayer* player, uint64_t eventNameHash, const rage::args_t& args) override;
-	void OnEntityCreated(rage::IEntity* entity) override;
-	void OnEntityDestroyed(rage::IEntity* entity) override;
-	void OnEntityModelChange(rage::IEntity* entity, rage::hash_t oldModel) override;
-	void OnPlayerCreateWaypoint(rage::IPlayer* player, const rage::vector3& position) override;
-	void OnPlayerReachWaypoint(rage::IPlayer* player) override;
-	void OnPlayerEnterColshape(rage::IPlayer* player, rage::IColshape* colshape) override;
-	void OnPlayerExitColshape(rage::IPlayer* player, rage::IColshape* colshape) override;
-	void OnPlayerEnterCheckpoint(rage::IPlayer* player, rage::ICheckpoint* checkpoint) override;
-	void OnPlayerExitCheckpoint(rage::IPlayer* player, rage::ICheckpoint* checkpoint) override;
-	void OnTrailerAttached(rage::IVehicle* vehicle, rage::IVehicle* trailer) override;
-	void OnVehicleSirenToggle(rage::IVehicle* vehicle, bool toggle) override;
-	void OnVehicleDamage(rage::IVehicle* vehicle, float bodyHealthLoss, float engineHealthLoss) override;
-	void OnVehicleHornToggle(rage::IVehicle* vehicle, bool toggle) override;
+	//void OnPlayerStartEnterVehicle(rage::IPlayer* player, rage::IVehicle* vehicle, uint8_t seatId) override;
+	//void OnPlayerStartExitVehicle(rage::IPlayer* player, rage::IVehicle* vehicle) override;
+	//void OnPlayerWeaponChange(rage::IPlayer* player, rage::hash_t oldWeapon, rage::hash_t newWeapon) override;
+	//void OnPlayerRemoteEvent(rage::IPlayer* player, uint64_t eventNameHash, const rage::args_t& args) override;
+	//void OnEntityCreated(rage::IEntity* entity) override;
+	//void OnEntityDestroyed(rage::IEntity* entity) override;
+	//void OnEntityModelChange(rage::IEntity* entity, rage::hash_t oldModel) override;
+	//void OnPlayerCreateWaypoint(rage::IPlayer* player, const rage::vector3& position) override;
+	//void OnPlayerReachWaypoint(rage::IPlayer* player) override;
+	//void OnPlayerEnterColshape(rage::IPlayer* player, rage::IColshape* colshape) override;
+	//void OnPlayerExitColshape(rage::IPlayer* player, rage::IColshape* colshape) override;
+	//void OnPlayerEnterCheckpoint(rage::IPlayer* player, rage::ICheckpoint* checkpoint) override;
+	//void OnPlayerExitCheckpoint(rage::IPlayer* player, rage::ICheckpoint* checkpoint) override;
+	//void OnTrailerAttached(rage::IVehicle* vehicle, rage::IVehicle* trailer) override;
+	//void OnVehicleSirenToggle(rage::IVehicle* vehicle, bool toggle) override;
+	//void OnVehicleDamage(rage::IVehicle* vehicle, float bodyHealthLoss, float engineHealthLoss) override;
+	//void OnVehicleHornToggle(rage::IVehicle* vehicle, bool toggle) override;
 
 };
