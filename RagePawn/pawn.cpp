@@ -9,6 +9,7 @@
 #pragma comment( lib, "ws2_32.lib")  // amx_DGramInit(&amx); 
 
 #include "natives.hpp"
+#include "events.hpp"
 
 namespace fs = std::experimental::filesystem;
 
@@ -142,20 +143,14 @@ void Pawn::TerminateScript(AMX *amx)
 void Pawn::SetMultiplayer(rage::IMultiplayer *mp)
 {
 	this->m_mp = mp;
-	mp->AddEventHandler(dynamic_cast<rage::IEventHandler*>(&gm::EventHandler::GetInstance()));
+	mp->AddEventHandler(dynamic_cast<rage::IEventHandler*>(&EventHandler::GetInstance()));
 }
 
-bool Pawn::CallPublic(AMX *amx, const char* name)
+void Pawn::CallPublic(AMX *amx, const char* name)
 {
 	int id;
-	cell ret = 0;
-
 	if (!amx_FindPublic(amx, name, &id))
-	{
-		amx_Exec(amx, &ret, id);
-		if (!ret) return ret;
-	}
-	return (int)ret;
+		amx_Exec(amx, nullptr, id);
 }
 
 void Pawn::CallPublicEx(AMX *amx, const char *name, const char *fmt, ...)

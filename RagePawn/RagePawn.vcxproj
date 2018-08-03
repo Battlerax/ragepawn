@@ -162,6 +162,7 @@
     <ClCompile Include="pawn.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="events.hpp" />
     <ClInclude Include="format.hpp" />
     <ClInclude Include="main.hpp" />
     <ClInclude Include="pawn.hpp" />

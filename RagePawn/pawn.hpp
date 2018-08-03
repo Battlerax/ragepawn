@@ -17,7 +17,7 @@ class Pawn
 		void SetMultiplayer(rage::IMultiplayer *mp);
 		static Pawn& GetInstance() { static Pawn instance; return instance; }
 
-		static bool CallPublic(AMX *amx, const char* name);
+		static void CallPublic(AMX *amx, const char* name);
 		static void CallPublicEx(AMX *amx, const char * name, const char * fmt, ...);
 		
 		static void RunAMX(const std::string& path, bool fs);
@@ -30,35 +30,3 @@ class Pawn
 	private:
 		rage::IMultiplayer *m_mp;
 };
-
-namespace gm
-{
-	class EventHandler
-		: public rage::IEventHandler,
-		public rage::IPlayerHandler,
-		public rage::ITickHandler
-	{
-	public:
-
-		static EventHandler& GetInstance() { static EventHandler instance; return instance; }
-
-		virtual rage::ITickHandler *GetTickHandler() { return this; }
-		virtual rage::IPlayerHandler *GetPlayerHandler() { return this; }
-
-		virtual void OnPlayerJoin(rage::IPlayer *player)
-		{
-			for (auto &script : scripts)
-			{
-				Pawn::CallPublicEx(&script.amx, "OnPlayerConnect", "d", (int)player->GetId());
-			}
-		}
-
-		virtual void Tick()
-		{
-			for (auto &script : scripts)
-			{
-				Pawn::CallPublic(&script.amx, "OnUpdate"); // todo: Cache the address
-			}
-		}
-	};
-}

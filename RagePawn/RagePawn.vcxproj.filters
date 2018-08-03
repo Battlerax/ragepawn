@@ -34,5 +34,8 @@
     <ClInclude Include="natives.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="events.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
