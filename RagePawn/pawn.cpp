@@ -13,6 +13,8 @@
 
 namespace fs = std::experimental::filesystem;
 
+// Discontinued Open Source support
+
 extern "C" {
 	int AMXEXPORT AMXAPI amx_ConsoleInit(AMX *amx);
 	int AMXEXPORT AMXAPI amx_ConsoleCleanup(AMX *amx);
