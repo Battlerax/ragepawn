@@ -100,6 +100,8 @@ void Pawn::RunAMX(const std::string& path, const bool fs)
 	//    printf("     %s\n", temp);
 	//}
 
+	amx_Exec(&amx, nullptr, AMX_EXEC_MAIN); // execute main
+
 	script scr;
 	scr.amx = amx;
 	scr.fs = fs;
