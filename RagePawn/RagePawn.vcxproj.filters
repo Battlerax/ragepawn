@@ -20,6 +20,9 @@
     <ClCompile Include="format.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="natives.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pawn.hpp">
@@ -34,7 +37,7 @@
     <ClInclude Include="natives.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="events.hpp">
+    <ClInclude Include="callbacks.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

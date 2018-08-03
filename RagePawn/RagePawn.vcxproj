@@ -158,11 +158,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="format.cpp" />
+    <ClCompile Include="natives.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pawn.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="events.hpp" />
+    <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="format.hpp" />
     <ClInclude Include="main.hpp" />
     <ClInclude Include="pawn.hpp" />
