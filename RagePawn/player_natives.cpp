@@ -15,7 +15,7 @@ static cell AMX_NATIVE_CALL n_GetPlayerName(AMX *amx, const cell *params)
 	return 0;
 }
 
-AMX_NATIVE_INFO player_Natives[] =
+const AMX_NATIVE_INFO player_Natives[] =
 {
 	{ "GetPlayerName", n_GetPlayerName },
 	{ NULL, NULL }

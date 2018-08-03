@@ -1,7 +1,7 @@
 #include "main.hpp"
 #include "format.hpp"
 
-AMX_NATIVE_INFO util_Natives[] =
+const AMX_NATIVE_INFO util_Natives[] =
 {
 	{ "format", n_format },
 	{ NULL, NULL }
