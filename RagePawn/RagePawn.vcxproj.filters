@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="API">
+      <UniqueIdentifier>{05f56e66-e0f6-4811-8de2-e606f9a2f619}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -18,9 +21,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="format.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="natives.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -34,11 +34,11 @@
     <ClInclude Include="main.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="natives.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="callbacks.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="natives.hpp">
+      <Filter>API</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
