@@ -11,11 +11,10 @@ cell AMX_NATIVE_CALL n_format(AMX *amx, const cell *params)
 	info.skip = 0;
 	info.length = (int)params[2];
 
-	cell* cstr = amx_Address(amx, params[3]);
-	const auto result = get_str(amx, cstr, &info) + '\0';
+	cell* cstra = amx_Address(amx, params[3]);
+	const auto result = get_str(amx, cstra, &info) + '\0';
 
-	cstr = amx_Address(amx, params[1]);
-	amx_SetString(cstr, result.c_str(), 0, 0, (int)params[2]);
+	SET_STRING(result.c_str(), params[1], params[2]);
 	return true;
 }
 

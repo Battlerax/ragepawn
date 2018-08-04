@@ -3,12 +3,10 @@
 #include "pawn.hpp"
 
 // native GetHashKey(const string[]);
-static cell AMX_NATIVE_CALL n_joaat(AMX *amx, const cell *params)
+NATIVE (n_joaat)
 {
-	char str[512];
-	cell* cstr = amx_Address(amx, params[1]);
-	amx_GetString(str, cstr, 0, sizeof str);
-	return Pawn::joaat(str);
+	GET_STRING(params[1], 128)
+	return Pawn::joaat(output);
 }
 
 const AMX_NATIVE_INFO util_Natives[] =

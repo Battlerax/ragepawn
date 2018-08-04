@@ -3,27 +3,23 @@
 #include "xxHash_xxhash.hpp"
 
 // native GetPlayerName(playerid, name[], len);
-static cell AMX_NATIVE_CALL n_GetPlayerName(AMX *amx, const cell *params)
+NATIVE (n_GetPlayerName)
 {
-	HAS_PLAYER(player, (rage::entityId_t)params[1])
+	HAS_PLAYER(player, params[1])
 	{
-		cell* addr = amx_Address(amx, params[2]);
-		amx_SetString(addr, player->GetName().c_str(), 0, 0, (int)params[3]);
+		SET_STRING(player->GetName().c_str(), params[2], params[3]);
 		return true;
 	}
 	return false;
 }
 
 // native TriggerClientEvent(playerid, const name[]);
-static cell AMX_NATIVE_CALL n_TriggerClientEvent(AMX *amx, const cell *params)
+NATIVE (n_TriggerClientEvent)
 {
-	HAS_PLAYER(player, (rage::entityId_t)params[1])
+	HAS_PLAYER(player, params[1])
 	{
-		char str[128];
-		cell* cstr = amx_Address(amx, params[2]);
-		amx_GetString(str, cstr, 0, sizeof str);
-		const uint64_t name = XXHash64::hash(str, strlen(str), 0);
-		player->_CallHash(name, nullptr, 0); // todo args
+		GET_STRING(params[2], 256);
+		player->_CallHash(XXHash64::hash(output, strlen(output), 0), nullptr, 0); // todo args
 		return true;
 	}
 	return false;
