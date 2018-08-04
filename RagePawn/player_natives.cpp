@@ -13,13 +13,47 @@ NATIVE (n_GetPlayerName)
 	return false;
 }
 
-// native TriggerClientEvent(playerid, const name[]);
+// native TriggerClientEvent(playerid, const name[], const format[], ...);
+// example: TriggerClientEvent(playerid, "TestEvent", "sds", "wow", 12, "fart");
 NATIVE (n_TriggerClientEvent)
 {
 	HAS_PLAYER(player, params[1])
 	{
-		GET_STRING(params[2], 256);
-		player->_CallHash(XXHash64::hash(output, strlen(output), 0), nullptr, 0); // todo args
+		int len;
+		char* fName;
+		char* pList;
+		GET_STRLENGTHED(amx, params[2], fName);
+		GET_STRLENGTHED(amx, params[3], pList);
+
+		const int offset = 3;
+
+		if (pList == NULL) len = 0;
+		else len = strlen(pList);
+
+		while (len)
+		{
+			len--;
+			if (*(pList + len) == 's')
+			{
+				char* pText;
+				GET_STRLENGTHED(amx, params[len + offset], pText);
+				if (pText == NULL || strlen(pText) <= 0)
+				{
+					*pText = 1;
+					*(pText + 1) = 0;
+				}
+				const char* str = pText;
+				PushEventString(str, (int)strlen(str));
+				std::cout << str << std::endl;
+			}
+			else if (*(pList + len) == 'd')
+			{
+				std::cout << params[len + offset] << std::endl;
+				PushEventInt(params[len + offset]);
+			}
+		}
+		player->_CallHash(XXHash64::hash(fName, strlen(fName), 0), g_triggerBuff.args, g_triggerBuff.count); // todo args
+		g_triggerBuff.count = 0;
 		return true;
 	}
 	return false;
