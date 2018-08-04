@@ -5,8 +5,9 @@
 // native GetHashKey(const string[]);
 NATIVE (n_joaat)
 {
-	GET_STRING(params[1], 128);
-	return Pawn::joaat(output);
+	char* func;
+	GET_STRING(amx, params[1], func);
+	return Pawn::joaat(func);
 }
 
 const AMX_NATIVE_INFO util_Natives[] =

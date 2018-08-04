@@ -22,8 +22,8 @@ NATIVE (n_TriggerClientEvent)
 		int len;
 		char* fName;
 		char* pList;
-		GET_STRLENGTHED(amx, params[2], fName);
-		GET_STRLENGTHED(amx, params[3], pList);
+		GET_STRING(amx, params[2], fName);
+		GET_STRING(amx, params[3], pList);
 
 		const int offset = 3;
 
@@ -36,7 +36,7 @@ NATIVE (n_TriggerClientEvent)
 			if (*(pList + len) == 's')
 			{
 				char* pText;
-				GET_STRLENGTHED(amx, params[len + offset], pText);
+				GET_STRING(amx, params[len + offset], pText);
 				if (pText == NULL || strlen(pText) <= 0)
 				{
 					*pText = 1;
@@ -48,8 +48,13 @@ NATIVE (n_TriggerClientEvent)
 			}
 			else if (*(pList + len) == 'd')
 			{
-				std::cout << params[len + offset] << std::endl;
-				PushEventInt(params[len + offset]);
+				cell* cptr = amx_Address(amx, params[4]);
+				PushEventInt(*cptr);
+			}
+			else if (*(pList + len) == 'f')
+			{
+				cell* cptr = amx_Address(amx, params[4]);
+				PushEventFloat(*cptr);
 			}
 		}
 		player->_CallHash(XXHash64::hash(fName, strlen(fName), 0), g_triggerBuff.args, g_triggerBuff.count); // todo args
