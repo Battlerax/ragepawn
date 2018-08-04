@@ -206,3 +206,19 @@ void Pawn::CallPublicEx(AMX *amx, const char *name, const char *fmt, ...)
 
 	std::cout << "Finished callback..." << std::endl;
 }
+
+int32_t Pawn::joaat(std::string string)
+{
+	size_t i = 0;
+	int32_t hash = 0;
+	std::transform(string.begin(), string.end(), string.begin(), ::tolower);
+	while (i != string.length()) {
+		hash += string[i++];
+		hash += hash << 10;
+		hash ^= hash >> 6;
+	}
+	hash += hash << 3;
+	hash ^= hash >> 11;
+	hash += hash << 15;
+	return hash;
+}

@@ -28,6 +28,7 @@ class Pawn : public rage::IPlugin
 		static void TerminateScript(AMX *amx);
 
 		rage::IEntity *GetEntity(rage::entityId_t id, rage::entity_t type) const;
+		static int32_t joaat(std::string string);
 			
 	private:
 		rage::IMultiplayer *m_mp;

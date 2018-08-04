@@ -5,21 +5,18 @@
 // native format(output[], size = sizeof output, const format[], ...);
 cell AMX_NATIVE_CALL n_format(AMX *amx, const cell *params)
 {
-	cell *cstr;
 	strdata info;
-
-	memset(&info, 0, sizeof info);
 	info.params = params + 4;
 	info.numparams = (int)(params[0] / sizeof(cell) - 3);
 	info.skip = 0;
 	info.length = (int)params[2];
 
-	cstr = amx_Address(amx, params[3]);
+	cell* cstr = amx_Address(amx, params[3]);
 	const auto result = get_str(amx, cstr, &info) + '\0';
 
 	cstr = amx_Address(amx, params[1]);
 	amx_SetString(cstr, result.c_str(), 0, 0, (int)params[2]);
-	return 1;
+	return true;
 }
 
 static std::string to_string(AMX *amx, TCHAR ch, cell param, TCHAR sign, TCHAR decpoint, int width, int digits, TCHAR filler)

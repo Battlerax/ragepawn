@@ -12,6 +12,9 @@
     <Filter Include="API">
       <UniqueIdentifier>{05f56e66-e0f6-4811-8de2-e606f9a2f619}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dependencies">
+      <UniqueIdentifier>{c507d60a-e1b3-4427-89af-e053c797ac4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -45,6 +48,9 @@
     </ClInclude>
     <ClInclude Include="api.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xxHash_xxhash.hpp">
+      <Filter>Dependencies</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
