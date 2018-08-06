@@ -27,8 +27,15 @@ NATIVE (n_TriggerClientEvent)
 
 		const int offset = 3;
 
-		if (pList == NULL) len = 0;
-		else len = strlen(pList);
+		if (pList == NULL)
+		{
+			len = 0;
+			PushEventNull();
+		}
+		else
+		{
+			len = strlen(pList);
+		}
 
 		while (len)
 		{
@@ -44,7 +51,6 @@ NATIVE (n_TriggerClientEvent)
 				}
 				const char* str = pText;
 				PushEventString(str, (int)strlen(str));
-				std::cout << str << std::endl;
 			}
 			else if (*(pList + len) == 'd')
 			{
@@ -55,6 +61,10 @@ NATIVE (n_TriggerClientEvent)
 			{
 				cell* cptr = amx_Address(amx, params[4]);
 				PushEventFloat(*cptr);
+			}
+			else
+			{
+				PushEventNull();
 			}
 		}
 		player->_CallHash(XXHash64::hash(fName, strlen(fName), 0), g_triggerBuff.args, g_triggerBuff.count); // todo args
