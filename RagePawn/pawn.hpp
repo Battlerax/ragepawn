@@ -1,7 +1,6 @@
 #pragma once
 #include "main.hpp"
 #include "../amxlib/amx.h" 
-
 typedef struct {
 	bool fs;
 	AMX amx;
