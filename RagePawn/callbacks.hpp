@@ -1,7 +1,7 @@
 #pragma once
 #include "pawn.hpp"
 
-class EventHandler: 
+class EventHandler :
 	public rage::IEventHandler,
 	public rage::IEntityHandler,
 	public rage::IPlayerHandler,
@@ -39,7 +39,7 @@ public:
 	// forward OnUpdate();
 	void Tick() override
 	{
-		for (auto &script : scripts) 
+		for (auto &script : scripts)
 			Pawn::CallPublic(&script.amx, "OnUpdate");
 	}
 
@@ -49,19 +49,19 @@ public:
 	{
 		int result;
 		const int type = (int)exitType;
-		switch(type)
+		switch (type)
 		{
-			case 0: // disconnect
-				result = 1;
-				break;
-			case 1: // timeout
-				result = 0;
-				break;
-			default:
-				result = type;
+		case 0: // disconnect
+			result = 1;
+			break;
+		case 1: // timeout
+			result = 0;
+			break;
+		default:
+			result = type;
 		}
 
-		for (auto &script : scripts) 
+		for (auto &script : scripts)
 			Pawn::CallPublicEx(&script.amx, "OnPlayerConnect", "d", (int)player->GetId(), "d", result, "s", reason ? reason : "");
 	}
 
@@ -133,22 +133,111 @@ public:
 			Pawn::CallPublicEx(&script.amx, "OnPlayerDamage", "d", (int)player->GetId(), "f", healthLoss, "f", armorLoss);
 	}
 
-	//void OnPlayerStartEnterVehicle(rage::IPlayer* player, rage::IVehicle* vehicle, uint8_t seatId) override;
-	//void OnPlayerStartExitVehicle(rage::IPlayer* player, rage::IVehicle* vehicle) override;
-	//void OnPlayerWeaponChange(rage::IPlayer* player, rage::hash_t oldWeapon, rage::hash_t newWeapon) override;
+	//forward OnPlayerStartEnterVehicle(playerid, vehicleid, seatid);
+	void OnPlayerStartEnterVehicle(rage::IPlayer* player, rage::IVehicle* vehicle, uint8_t seatId) override
+	{
+		for (auto &script : scripts)
+			Pawn::CallPublicEx(&script.amx, "OnPlayerStartEnterVehicle", "d", (int)player->GetId(), "d", (int)vehicle->GetId(), "d", (int)seatId);
+	}
+	//forward OnPlayerStartExitVehicle(playerid,vehicleid);
+	void OnPlayerStartExitVehicle(rage::IPlayer* player, rage::IVehicle* vehicle) override
+	{
+		for (auto &script : scripts)
+			Pawn::CallPublicEx(&script.amx, "OnPlayerStartEnterVehicle", "d", (int)player->GetId(), "d", (int)vehicle->GetId());
+	}
+
+	//forward OnPlayerWeaponChange(
+	void OnPlayerWeaponChange(rage::IPlayer* player, rage::hash_t oldWeapon, rage::hash_t newWeapon) override
+	{
+		for (auto &script : scripts)
+			Pawn::CallPublicEx(&script.amx, "OnPlayerWeaponChange", "d", (int)player->GetId(), "d", (int)oldWeapon, "d", (int)newWeapon);
+	}
+
+
 	//void OnPlayerRemoteEvent(rage::IPlayer* player, uint64_t eventNameHash, const rage::args_t& args) override;
-	//void OnEntityCreated(rage::IEntity* entity) override;
-	//void OnEntityDestroyed(rage::IEntity* entity) override;
-	//void OnEntityModelChange(rage::IEntity* entity, rage::hash_t oldModel) override;
-	//void OnPlayerCreateWaypoint(rage::IPlayer* player, const rage::vector3& position) override;
-	//void OnPlayerReachWaypoint(rage::IPlayer* player) override;
-	//void OnPlayerEnterColshape(rage::IPlayer* player, rage::IColshape* colshape) override;
-	//void OnPlayerExitColshape(rage::IPlayer* player, rage::IColshape* colshape) override;
-	//void OnPlayerEnterCheckpoint(rage::IPlayer* player, rage::ICheckpoint* checkpoint) override;
-	//void OnPlayerExitCheckpoint(rage::IPlayer* player, rage::ICheckpoint* checkpoint) override;
-	//void OnTrailerAttached(rage::IVehicle* vehicle, rage::IVehicle* trailer) override;
-	//void OnVehicleSirenToggle(rage::IVehicle* vehicle, bool toggle) override;
-	//void OnVehicleDamage(rage::IVehicle* vehicle, float bodyHealthLoss, float engineHealthLoss) override;
-	//void OnVehicleHornToggle(rage::IVehicle* vehicle, bool toggle) override;
+
+
+	void OnEntityCreated(rage::IEntity* entity) override
+	{
+		for (auto &script : scripts)
+			Pawn::CallPublicEx(&script.amx, "OnEntityCreated", "d", (int)entity->GetId());
+	}
+
+	void OnEntityDestroyed(rage::IEntity* entity) override
+	{
+		for (auto &script : scripts)
+			Pawn::CallPublicEx(&script.amx, "OnEntityDestroyed", "d", (int)entity->GetId());
+	}
+
+
+	void OnEntityModelChange(rage::IEntity* entity, rage::hash_t oldModel) override
+	{
+		for (auto &script : scripts)
+			Pawn::CallPublicEx(&script.amx, "OnEntityModelChange", "d", (int)entity->GetId(), "d", (int)oldModel);
+	}
+
+	void OnPlayerCreateWaypoint(rage::IPlayer* player, const rage::vector3& position) override
+	{
+		for (auto &script : scripts)
+			Pawn::CallPublicEx(&script.amx, "OnPlayerCreateWaypoint", "d", (int)player->GetId(), "f", position.x, "f", position.y, "f", position.z);
+	}
+
+	void OnPlayerReachWaypoint(rage::IPlayer* player) override
+	{
+		for (auto &script : scripts)
+			Pawn::CallPublicEx(&script.amx, "OnPlayerReachWaypoint", "d", (int)player->GetId());
+	}
+
+	void OnPlayerEnterColshape(rage::IPlayer* player, rage::IColshape* colshape) override
+	{
+		for (auto &script : scripts)
+			Pawn::CallPublicEx(&script.amx, "OnPlayerEnterColShape", "d", (int)player->GetId(), "d", (int)colshape->GetId());
+	}
+
+
+	void OnPlayerExitColshape(rage::IPlayer* player, rage::IColshape* colshape) override
+	{
+		for (auto &script : scripts)
+			Pawn::CallPublicEx(&script.amx, "OnPlayerExitColshape", "d", (int)player->GetId(), "d", (int)colshape->GetId());
+	}
+
+	void OnPlayerEnterCheckpoint(rage::IPlayer* player, rage::ICheckpoint* checkpoint) override
+	{
+		for (auto &script : scripts)
+			Pawn::CallPublicEx(&script.amx, "OnPlayerEnterCheckpoint", "d", (int)player->GetId(), "d", (int)checkpoint->GetId());
+	}
+
+
+	void OnPlayerExitCheckpoint(rage::IPlayer* player, rage::ICheckpoint* checkpoint) override
+	{
+		for (auto &script : scripts)
+			Pawn::CallPublicEx(&script.amx, "OnPlayerExitCheckpoint", "d", (int)player->GetId(), "d", (int)checkpoint->GetId());
+	}
+
+	void OnTrailerAttached(rage::IVehicle* vehicle, rage::IVehicle* trailer) override
+	{
+		for (auto &script : scripts)
+			Pawn::CallPublicEx(&script.amx, "OnTrailerAttached", "d", (int)vehicle->GetId(), "d", (int)vehicle->GetId());
+	}
+
+	//todo: Add the ability to pass boolean values to CallPublicEx
+	void OnVehicleSirenToggle(rage::IVehicle* vehicle, bool toggle) override
+	{
+		for (auto &script : scripts)
+			Pawn::CallPublicEx(&script.amx, "OnVehicleSirenToggle", "d", (int)vehicle->GetId(), "d", (int)toggle);
+	}
+
+	void OnVehicleDamage(rage::IVehicle* vehicle, float bodyHealthLoss, float engineHealthLoss) override
+	{
+		for (auto &script : scripts)
+			Pawn::CallPublicEx(&script.amx, "OnVehicleDamage", "d", (int)vehicle->GetId(), "f", bodyHealthLoss, "f", engineHealthLoss);
+	}
+
+
+	void OnVehicleHornToggle(rage::IVehicle* vehicle, bool toggle) override
+	{
+		for (auto &script : scripts)
+			Pawn::CallPublicEx(&script.amx, "OnVehicleHornToggle", "d", (int)vehicle->GetId(), "d", (int)toggle);
+	}
 
 };
