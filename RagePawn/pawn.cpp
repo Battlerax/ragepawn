@@ -46,6 +46,7 @@ Pawn::Pawn()
 	const std::string::size_type pos = std::string(buffer).find_last_of("\\/");
 	std::string path = std::string(buffer).substr(0, pos);
 	Iterate(path.append("\\amx\\filterscripts"), true);
+	path.clear();
 	std::cout << std::endl;
 	Iterate(path.append("\\amx\\gamemodes"), false);
 }
