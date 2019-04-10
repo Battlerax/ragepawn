@@ -47,6 +47,7 @@ Pawn::Pawn()
 	std::string path = std::string(buffer).substr(0, pos);
 	Iterate(path.append("\\amx\\filterscripts"), true);
 	path.clear();
+	path = std::string(buffer).substr(0, pos);
 	std::cout << std::endl;
 	Iterate(path.append("\\amx\\gamemodes"), false);
 }
