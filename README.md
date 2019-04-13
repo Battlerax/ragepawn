@@ -21,6 +21,8 @@ main() {
 
 ## Deployment
 
+Compile your awesome new script with:
+
 ```
 pawncc -C64 hello.pwn
 ```
