@@ -27,7 +27,7 @@ Compile your awesome new script with:
 pawncc -C64 hello.pwn
 ```
 
-Copy your output 'hello.amx' to 'server-files/amx/filterscripts' folder and launch the server!
+then copy the output amx file "hello.amx" to 'server-files/amx/filterscripts' folder and launch the server!
 
 The result should be:
 ```
