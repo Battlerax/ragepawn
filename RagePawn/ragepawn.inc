@@ -15,7 +15,7 @@ Contains all of the natives and required stuff to get running
 #define function%0(%1) forward%0(%1); public%0(%1)
 
 // Console
-native println(const string[], foreground = -1, background = -1, highlight = -1);
+native println(const string[]);
 native printfln(const format[], { Float,Fixed,_ }:...);
 
 // String manipulation
