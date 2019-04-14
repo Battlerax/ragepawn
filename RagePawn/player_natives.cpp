@@ -74,9 +74,22 @@ NATIVE (n_TriggerClientEvent)
 	return false;
 }
 
+NATIVE(n_SendClientMessage) 
+{
+	HAS_PLAYER(player, params[1])
+	{
+		char* fName;
+		GET_STRING(amx, params[2], fName);
+		if(fName) player->OutputChatBox(fName);
+		return true;
+	}
+	return false;
+}
+
 const AMX_NATIVE_INFO player_Natives[] =
 {
 	{ "GetPlayerName", n_GetPlayerName },
+	{ "SendClientMessage", n_SendClientMessage },
 	{ "TriggerClientEvent", n_TriggerClientEvent },
 	{ NULL, NULL }
 };
