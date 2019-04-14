@@ -22,7 +22,7 @@ enum {
 };
 
 cell AMX_NATIVE_CALL n_format(AMX *amx, const cell *params);
-static std::string get_str(AMX *amx, cell *cstr, strdata *info);
+std::string get_str(AMX *amx, cell *cstr, strdata *info);
 static std::string to_string(AMX *amx, TCHAR ch, cell param, TCHAR sign, TCHAR decpoint, int width, int digits, TCHAR filler);
 static int formatstate(TCHAR c, int *state, TCHAR *sign, TCHAR *decpoint, int *width, int *digits, TCHAR *filler);
 static TCHAR *amx_strval(TCHAR buffer[], long value, int format, int width);

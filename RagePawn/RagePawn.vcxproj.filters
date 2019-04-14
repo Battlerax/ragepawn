@@ -15,6 +15,9 @@
     <Filter Include="Dependencies">
       <UniqueIdentifier>{c507d60a-e1b3-4427-89af-e053c797ac4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="includes">
+      <UniqueIdentifier>{f81083d1-f7fe-4eba-aba4-4f8f2d8fe69f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -52,5 +55,10 @@
     <ClInclude Include="xxHash_xxhash.hpp">
       <Filter>Dependencies</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ragepawn.inc">
+      <Filter>API</Filter>
+    </None>
   </ItemGroup>
 </Project>

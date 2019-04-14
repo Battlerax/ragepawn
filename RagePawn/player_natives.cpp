@@ -2,12 +2,12 @@
 #include "api.hpp"
 #include "xxHash_xxhash.hpp"
 
-// native GetPlayerName(playerid, name[], len);
+// native GetPlayerName(playerid, name[]);
 NATIVE (n_GetPlayerName)
 {
 	HAS_PLAYER(player, params[1])
 	{
-		SET_STRING(player->GetName().c_str(), params[2], params[3]);
+		SET_STRING(player->GetName().c_str(), params[2]);
 		return true;
 	}
 	return false;

@@ -224,19 +224,3 @@ int Pawn::joaat(std::string string)
 	hash += hash << 15;
 	return hash;
 }
-
-int Pawn::str_cell_size(const cell* param)
-{
-	int j = sizeof(cell) - sizeof(char);
-	int count = 0;
-	int i = 0;
-	for (; ; )
-	{
-		count++; // count the last null
-		const auto c = (char)((ucell)param[i] >> 8 * j);
-		if (c == 0) break;
-		if (j == 0) i++;
-		j = (j + sizeof(cell) - sizeof(char)) % sizeof(cell);
-	}
-	return count;
-}
