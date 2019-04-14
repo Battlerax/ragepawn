@@ -23,7 +23,7 @@
     <ProjectGuid>{F66E3CAC-649E-424E-A9B3-24C77589DCF9}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>RagePawn</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -146,7 +146,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;RAGEPAWN_EXPORTS;_CRT_SECURE_NO_WARNINGS_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PAWN_CELL_SIZE=64;NDEBUG;RAGEPAWN_EXPORTS;_CRT_SECURE_NO_WARNINGS_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>

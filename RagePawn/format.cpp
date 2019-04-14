@@ -2,19 +2,18 @@
 #include <tchar.h>
 #include <cassert>
 
-// native format(output[], size = sizeof output, const format[], ...);
+// native format(output[], const format[], ...);
 cell AMX_NATIVE_CALL n_format(AMX *amx, const cell *params)
 {
 	strdata info;
-	info.params = params + 4;
-	info.numparams = (int)(params[0] / sizeof(cell) - 3);
+	info.params = params + 3;
+	info.numparams = (int)(params[0] / sizeof(cell) - 2);
 	info.skip = 0;
-	info.length = (int)params[2];
 
-	cell* cstra = amx_Address(amx, params[3]);
+	cell* cstra = amx_Address(amx, params[2]);
 	const auto result = get_str(amx, cstra, &info) + '\0';
 
-	SET_STRING(result.c_str(), params[1], params[2]);
+	SET_STRING(result.c_str(), params[1]);
 	return true;
 }
 
