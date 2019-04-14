@@ -16,7 +16,7 @@ NATIVE (n_println)
 	char* pStr;
 	GET_STRING(amx, params[1], pStr);
 
-	std::cout << params[1] << std::endl;
+	std::cout << pStr << std::endl;
 	return 0;
 }
 
