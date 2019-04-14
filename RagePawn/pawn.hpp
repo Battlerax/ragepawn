@@ -28,7 +28,6 @@ class Pawn : public rage::IPlugin
 
 		rage::IEntity *GetEntity(rage::entityId_t id, rage::entity_t type) const;
 		static int joaat(std::string string);
-		static int str_cell_size(const cell* param);
 			
 	private:
 		rage::IMultiplayer *m_mp;

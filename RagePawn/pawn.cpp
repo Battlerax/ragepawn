@@ -161,16 +161,17 @@ void Pawn::CallPublic(AMX *amx, const char* name)
 		amx_Exec(amx, nullptr, id);
 }
 
+// Note: Params must be sent in REVERSE order to the function.
 void Pawn::CallPublicEx(AMX *amx, const char *name, const char *fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
-	
+
 	int index;
 	int err = amx_FindPublic(amx, name, &index);
 	if (err != AMX_ERR_NONE) 
 	{
-		Terminate(err);
+		if(err != AMX_ERR_NOTFOUND) Terminate(err);
 		return;
 	}
 
@@ -203,10 +204,9 @@ void Pawn::CallPublicEx(AMX *amx, const char *name, const char *fmt, ...)
 		amx_Release(amx, i);
 		i = NULL;
 	}
+
 	addresses.clear();
 	va_end(args);
-
-	std::cout << "Finished callback..." << std::endl;
 }
 
 int Pawn::joaat(std::string string)
@@ -223,20 +223,4 @@ int Pawn::joaat(std::string string)
 	hash ^= hash >> 11;
 	hash += hash << 15;
 	return hash;
-}
-
-int Pawn::str_cell_size(const cell* param)
-{
-	int j = sizeof(cell) - sizeof(char);
-	int count = 0;
-	int i = 0;
-	for (; ; )
-	{
-		count++; // count the last null
-		const auto c = (char)((ucell)param[i] >> 8 * j);
-		if (c == 0) break;
-		if (j == 0) i++;
-		j = (j + sizeof(cell) - sizeof(char)) % sizeof(cell);
-	}
-	return count;
 }

@@ -2,10 +2,8 @@
 #include "api.hpp"
 #include "pawn.hpp"
 #include "xxHash_xxhash.hpp"
-
 #include <limits.h>
 
-//This may be already a thing need to ask george or austin.
 #define INVALID_VEHICLE_ID = USHRT_MAX;
 #define INVALID_PLAYER_ID = USHRT_MAX;
 /*
@@ -109,13 +107,13 @@ NATIVE(n_notifyPlayer)
 	return false;
 }
 
-// native GetPlayerName(playerid, name[], len);
-NATIVE (n_getPlayerName)
+// native GetPlayerName(playerid, name[]);
+NATIVE (n_GetPlayerName)
 {
-	
+	CHECK_PARAMS(2);
 	HAS_PLAYER(player, params[1])
 	{
-		SET_STRING(player->GetName().c_str(), params[2], params[3]);
+		SET_STRING(player->GetName().c_str(), params[2]);
 		return true;
 	}
 	return false;
@@ -319,7 +317,7 @@ NATIVE(n_setPlayerArmour)
 }
 
 //virtual const vector3& GetAimingAt() = 0;
-//native GetPlayerAimPosition(playerid, Float:x, Float:y, Float:z);
+//native GetPlayerAimPosition(playerid, &Float:x, &Float:y, &Float:z);
 NATIVE(n_getPlayerAimPosition)
 {
 	CHECK_PARAMS(4);
@@ -607,6 +605,19 @@ NATIVE(n_putPlayerInVehicle)
 //virtual const std::string& GetSocialClubName() = 0;
 
 //virtual void RemoveObject(uint32_t model, const vector3& position, float radius) = 0;
+
+NATIVE(n_SendClientMessage) 
+{
+	CHECK_PARAMS(2);
+	HAS_PLAYER(player, params[1])
+	{
+		char* fName;
+		GET_STRING(amx, params[2], fName);
+		if(fName) player->OutputChatBox(fName);
+		return true;
+	}
+	return false;
+}
 
 const AMX_NATIVE_INFO player_Natives[] =
 {
