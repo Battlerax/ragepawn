@@ -108,7 +108,7 @@ NATIVE(n_notifyPlayer)
 }
 
 // native GetPlayerName(playerid, name[]);
-NATIVE (n_GetPlayerName)
+NATIVE (n_getPlayerName)
 {
 	CHECK_PARAMS(2);
 	HAS_PLAYER(player, params[1])
