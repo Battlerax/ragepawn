@@ -188,7 +188,7 @@ static std::string to_string(AMX *amx, TCHAR ch, cell param, TCHAR sign, TCHAR d
 	return end_result;
 }
 
-static std::string get_str(AMX *amx, cell *cstr, strdata *info)
+std::string get_str(AMX *amx, cell *cstr, strdata *info)
 {
 	int i, paramidx = 0;
 	int fmtstate = FMT_NONE, width, digits;
