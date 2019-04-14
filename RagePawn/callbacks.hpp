@@ -184,7 +184,6 @@ public:
 			Pawn::CallPublicEx(&script.amx, "OnPlayerReachWaypoint", "d", (int)player->GetId());
 	}
 
-
 	void OnPlayerEnterColshape(rage::IPlayer* player, rage::IColshape* colshape) override
 	{
 		for (auto &script : scripts)

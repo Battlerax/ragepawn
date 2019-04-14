@@ -24,10 +24,14 @@ native format(output[], const format[], ...);
 // Utils
 native GetHashKey(const string[]);
 native TriggerClientEvent(playerid, const name[], const format[], ...);
+
+// Player Functions
 native GetPlayerName(playerid, name[]);
+native SendClientMessage(playerid, const message[]);
+#define OutputChatBox(%0,%1) SendClientMessage(%0,%1)
 
 // Callbacks
-forward OnIncomingConnection(playerid, ip_address[], serial[])
+forward OnIncomingConnection(playerid, ip_address[]);
 forward OnPlayerConnect(playerid);
 forward OnUpdate();
 forward OnPlayerDisconnect(playerid, reason, message[]);

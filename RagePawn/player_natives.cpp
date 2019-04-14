@@ -5,6 +5,7 @@
 // native GetPlayerName(playerid, name[]);
 NATIVE (n_GetPlayerName)
 {
+	CHECK_PARAMS(2);
 	HAS_PLAYER(player, params[1])
 	{
 		SET_STRING(player->GetName().c_str(), params[2]);
@@ -76,6 +77,7 @@ NATIVE (n_TriggerClientEvent)
 
 NATIVE(n_SendClientMessage) 
 {
+	CHECK_PARAMS(2);
 	HAS_PLAYER(player, params[1])
 	{
 		char* fName;
