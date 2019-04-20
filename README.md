@@ -54,5 +54,4 @@ Special thanks to Y-Less for Windows 64bit fixes and those who have helped narro
 ## Acknowledgments
 
 * The glorious RAGE Multiplayer's SDK was used, cause how would we achieve this without it?
-* We sinned and looked into SA-MP's leaked code for inspiration *giggles*, copy-paste was not used.
 * Pawn is outdated.
